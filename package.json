@@ -13,6 +13,6 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "start-api": "cd ../syncit-backend && set FLASK_APP=syncit.api.py && py -m flask run"
+    "start-api": "cd ../syncit-backend && set FLASK_APP=syncit.api.py&& py -m flask run"
   }
 }
