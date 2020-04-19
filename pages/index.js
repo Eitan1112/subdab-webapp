@@ -7,12 +7,10 @@ function App() {
   const [message, setMessage] = useState("Here comes the message");
 
   const sync = async () => {
-    // Read subtitles file and parse it
-    // Get valid indexes 
-    // Read blob
-    // Trim the blob and get the buffers
-    // Send it to the API
-
+    /**
+     * Main entry function for syncing the subtitles.
+     */
+    
     const videoEle = document.getElementById('video-file')
     const subsEle = document.getElementById('subtitles-file')
     const readers = new Readers(subsEle, videoEle)

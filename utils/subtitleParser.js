@@ -5,7 +5,6 @@ class SubtitlesParser {
    * Class for parsing the subtitles.
    *
    * Attributes:
-   *
    *       re_subs (array): Array of arrays containing the subtitles in groups.
    *       subtitles (string): The subtitles
    */
@@ -19,7 +18,6 @@ class SubtitlesParser {
      */
 
     this.subtitles = subtitles;
-
     const regex = /(\d+)\r\n(\d\d:\d\d:\d\d,\d\d\d) --> (\d\d:\d\d:\d\d,\d\d\d)\r\n((?:.+\n)*.+)/gm;
     this.re_subs = Array.from(this.subtitles.matchAll(regex));
   }
