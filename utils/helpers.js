@@ -60,3 +60,4 @@ export const arrayBufferToBase64 = (buffer) => {
     }
     return window.btoa(binary);
 }
+

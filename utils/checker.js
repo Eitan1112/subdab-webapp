@@ -52,6 +52,7 @@ class Checker {
     }
 
     async syncSubtitles() {
+        var t0 = performance.now();
         await this.prepare()
         const json_res = await this.checkSync()
         console.log('Is Synced:', json_res.is_synced)
@@ -60,7 +61,10 @@ class Checker {
             let start = json_res.send_timestamp.start
             let end = json_res.send_timestamp.end
             const delay = await this.checkDelay(start, end)
-            console.log('Delay: ', delay)
+            const new_filename = this.filename.split('.')[0] + '.srt'
+            this.sp.download_subtitles(new_filename, delay)
+            var t1 = performance.now();
+            console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
         } else {
             console.log(json_res)
         }

@@ -22,6 +22,58 @@ class SubtitlesParser {
     this.re_subs = Array.from(this.subtitles.matchAll(regex));
   }
 
+  download_subtitles(filename, delay) {
+    const new_subtitles = this.generate_new_subtitles(delay)
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(new_subtitles));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
+
+
+  generate_new_subtitles(delay) {
+    /**
+     *  Generates new subtitle string with delay added.
+     * 
+     *   Params:
+     *       delay (double): Delay to add.
+     * 
+     *   Returns:
+     *       string: The subtitles with the delay added.
+     * */
+
+    const rows = this.subtitles.split('\r\n')
+    let new_subtitles = ''
+
+    for (const row of rows) {
+      // Search for timestamps
+      const timestamps_pattern = /(\d\d:\d\d:\d\d,\d{3}) --> (\d\d:\d\d:\d\d,\d{3})/gim // Match a pattern like: 00: 00: 06, 181 -- > 00: 00: 08, 383
+      const match = Array.from(row.matchAll(timestamps_pattern))
+
+      // If row is not timestamp
+      if (match === undefined || match.length == 0) {
+        new_subtitles += row + '\r\n'
+        continue
+      }
+
+
+      // If row is timestamp -> Calculate new time and append
+      const start_time = this.add_delay(match[0][1], delay)
+      const end_time = this.add_delay(match[0][2], delay)
+      const new_row = `${start_time} --> ${end_time}\r\n`
+      new_subtitles += new_row
+    }
+
+    console.log(new_subtitles)
+    return new_subtitles
+  }
+
   get_valid_subtitles_timestamps() {
     /**
      * Get valid timestamps from the subtitles file. Valid timestamps
@@ -54,7 +106,7 @@ class SubtitlesParser {
       if (!indexes_checked.includes(index)) {
         // Get cleaned subtitles and timestamps
         const [subtitles, start, end] = this.get_subtitles(index);
-        
+
         if (subtitles != "") {
           subtitles_timestamps.push([subtitles, start, end]);
         }
@@ -137,6 +189,52 @@ class SubtitlesParser {
     } catch {
       throw Error(`Wrong time format in subtitles. Recieved: ${subs_time}`);
     }
+  }
+
+
+  convert_seconds_time(seconds) {
+    /**
+     * Convert seconds time to subtitles time.
+     *   Params:
+     *       seconds (int): Seconds to convert.
+     *   Returns:
+     *       str: subtitles format time. (e.g: 00:00:06,181 --> 00:00:08,383)
+     */
+
+    if (seconds > 362439.999) {
+      throw Error('Failed to convert seconds time. Number too large.')
+    }
+
+    const hours = String((Math.floor(seconds / 3600))).padStart(2, '0')
+    seconds = seconds % 3600
+
+    const minutes = String((Math.floor(seconds / 60))).padStart(2, '0')
+    seconds = seconds % 60
+
+    const miliseconds = String((Math.floor(seconds % 1 * 1000)))
+    seconds = String(Math.floor(seconds)).padStart(2, '0')
+
+    const time = `${hours}:${minutes}:${seconds},${miliseconds}`
+    return time
+  }
+
+
+  add_delay(time, delay) {
+    /**
+    * Adds delay in seconds to subtitles time.
+    * 
+    * Params:
+    *     time (str): time in subtitles format. (e.g.: 00:00:06,181)
+    *     delay (float): delay to add in seconds.
+    * 
+    * Returns:
+    *     str: time in subtitles format with the delay added.
+    */
+
+    let time_in_seconds = this.convert_subs_time(time)
+    time_in_seconds += delay
+    const new_time = this.convert_seconds_time(time_in_seconds)
+    return new_time
   }
 }
 
