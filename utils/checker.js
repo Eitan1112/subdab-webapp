@@ -55,8 +55,11 @@ class Checker {
         var t0 = performance.now();
         await this.prepare()
         const json_res = await this.checkSync()
-        console.log('Is Synced:', json_res.is_synced)
-        if (!json_res.is_synced) {
+        if(json_res.hasOwnProperty('error')){
+            console.log(`Error: ${json_res.error}`)
+            return
+        }
+        if (json_res.hasOwnProperty('is_synced') && !json_res.is_synced) {
             console.log('Checking delay')
             let start = json_res.send_timestamp.start
             let end = json_res.send_timestamp.end
@@ -64,9 +67,11 @@ class Checker {
             const new_filename = this.filename.split('.')[0] + '.srt'
             this.sp.download_subtitles(new_filename, delay)
             var t1 = performance.now();
-            console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+            console.log("Call to sync took " + (t1 - t0) + " milliseconds.");
+        } else if(json_res.hasOwnProperty('is_synced') && json_res.is_synced) {
+            console.log('Synced!')
         } else {
-            console.log(json_res)
+            console.log(`Misformed response. ${json_res}`)
         }
     }
 
@@ -77,7 +82,10 @@ class Checker {
 
         const valid_subtitles_timestamps = this.sp.get_valid_subtitles_timestamps()
         const data = await this.getBuffersAndTimestamps(valid_subtitles_timestamps)
-        const json_data = JSON.stringify(data)
+        const json_data = JSON.stringify({
+            data,
+            extension: this.filename.split('.')[1]
+        })
         const check_sync_url = Constants.SERVER + Constants.CHECK_SYNC_ROUTE
         const request_content = {
             method: 'POST',
@@ -100,7 +108,8 @@ class Checker {
             const check_delay_body = JSON.stringify({
                 base64str,
                 timestamp: { start, end },
-                subtitles: this.sp.subtitles
+                subtitles: this.sp.subtitles,
+                extension: this.filename.split('.')[1]
             })
             const request_content = {
                 method: 'POST',
