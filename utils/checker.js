@@ -7,11 +7,13 @@ class Checker {
     /**
      * Class for reading files and making actions on these data.
      *
-     * @param {Element} subsElement
-     * @param {Element} videoElement
-     * @param {Worker} worker
-     * @param {SubtitlesParser} sp
-     * @param {String} filename
+     * 
+     * Attributes:
+     *      subsElement (Element): The subtitles file input element.
+     *      videoElement (Element): The video file input element.
+     *      worker (Worker): The ffmpeg worker.
+     *      sp (SubtitleParser): The subtitle parser object. (Only loads after prepare is called).
+     *      filename (String): The video filename. (Only loads after prepare is called).
      */
 
     constructor() {
@@ -26,6 +28,11 @@ class Checker {
     }
 
     async prepare() {
+        /**
+         * Prepares the Checker instance for checking delay or sync by loading the ffmpeg-core,
+         * reading the binary file and writing it to the file system, and reading and parsing the subtitles.
+         */
+
         if (!this.subsElement.files || !this.videoElement.files) {
             throw Error('Please upload both files.')
         }
@@ -52,6 +59,11 @@ class Checker {
     }
 
     async syncSubtitles() {
+        /**
+         * The main entry point which checks the sync of video and subtitles, and if they
+         * are not synced -> checks delay and downloads new subtitles file.
+         */
+
         var t0 = performance.now();
         await this.prepare()
         const json_res = await this.checkSync()
@@ -77,7 +89,11 @@ class Checker {
 
     async checkSync() {
         /**
+         * Checks whether the subtitles and video file are synced by sending buffers and subtitles to the
+         * server for comparison.
          * 
+         * Returns:
+         *      json_res (JSON): The response to the check_sync request in JSON format.
          */
 
         const valid_subtitles_timestamps = this.sp.get_valid_subtitles_timestamps()
@@ -99,6 +115,16 @@ class Checker {
     }
 
     async checkDelay(start, end) {
+        /**
+         * Checks the delay of the subtitles compared to the video.
+         * 
+         * Params:
+         *      start (int): The start time to trim the video. (Sent by server)
+         *      end (int): The end time to trim the video. (Sent by server)
+         * 
+         * Returns:
+         *      delay (float): The delay.
+         */
         let delay = undefined
 
         while (!delay) {

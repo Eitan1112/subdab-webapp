@@ -14,7 +14,7 @@ class SubtitlesParser {
      * Constructor for the SubtitlesParser class.
      *
      * Params:
-     *     subtitles (string): The subtitles
+     *     subtitles (String): The subtitles
      */
 
     this.subtitles = subtitles;
@@ -23,6 +23,13 @@ class SubtitlesParser {
   }
 
   download_subtitles(filename, delay) {
+    /**
+     * Downloads newly generated subtitles file based on the delay.
+     * 
+     * Params:
+     *    filename (String): The video filename.
+     *    delay (float): The delay.
+     */
     const new_subtitles = this.generate_new_subtitles(delay)
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(new_subtitles));
@@ -45,7 +52,7 @@ class SubtitlesParser {
      *       delay (double): Delay to add.
      * 
      *   Returns:
-     *       string: The subtitles with the delay added.
+     *       String: The subtitles with the delay added.
      * */
 
     const rows = this.subtitles.split('\r\n')

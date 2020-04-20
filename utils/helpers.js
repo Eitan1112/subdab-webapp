@@ -1,6 +1,9 @@
 export const readVideoAsync = (element) => {
     /**
      * Read the video file and resolve the file content as ArrayBuffer object.
+     * 
+     * Params:
+     *      element (Element): The file input element to read from.
      *
      * Returns:
      *    ArrayBuffer: Binary of the file.
@@ -23,6 +26,9 @@ export const readVideoAsync = (element) => {
 export const readSubtitlesAsync = (element) => {
     /**
      * Reads the subtitles file and resolves the subtitles file content.
+     * 
+     * Params:
+     *      element (Element): The file input element to read from.
      *
      * Returns:
      *    string: The subtitles.
