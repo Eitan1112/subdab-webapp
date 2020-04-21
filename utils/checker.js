@@ -58,32 +58,45 @@ class Checker {
         this.worker = worker
     }
 
-    async syncSubtitles() {
+    async syncSubtitles(skip_sync) {
         /**
          * The main entry point which checks the sync of video and subtitles, and if they
          * are not synced -> checks delay and downloads new subtitles file.
+         * 
+         * Params:
+         *      skip_sync (bool): If to skip the sync check (jump to delay check)
          */
 
         var t0 = performance.now();
         await this.prepare()
-        const json_res = await this.checkSync()
-        if(json_res.hasOwnProperty('error')){
-            console.log(`Error: ${json_res.error}`)
-            return
-        }
-        if (json_res.hasOwnProperty('is_synced') && !json_res.is_synced) {
-            console.log('Checking delay')
-            let start = json_res.send_timestamp.start
-            let end = json_res.send_timestamp.end
+        if (!skip_sync) {
+            const json_res = await this.checkSync()
+            if (json_res.hasOwnProperty('error')) {
+                console.log(`Error: ${json_res.error}`)
+                return
+            }
+            if (json_res.hasOwnProperty('is_synced') && !json_res.is_synced) {
+                console.log('Checking delay')
+                let start = json_res.send_timestamp.start
+                let end = json_res.send_timestamp.end
+                const delay = await this.checkDelay(start, end)
+                const new_filename = this.filename.split('.')[0] + '.srt'
+                this.sp.download_subtitles(new_filename, delay)
+                var t1 = performance.now();
+                console.log("Call to sync took " + (t1 - t0) + " milliseconds.");
+            } else if (json_res.hasOwnProperty('is_synced') && json_res.is_synced) {
+                console.log('Synced!')
+            } else {
+                console.log(`Misformed response. ${json_res}`)
+            }
+        } else {
+            let start = 0
+            let end = Constants.DEFAULT_SECTION_LENGTH
             const delay = await this.checkDelay(start, end)
             const new_filename = this.filename.split('.')[0] + '.srt'
             this.sp.download_subtitles(new_filename, delay)
             var t1 = performance.now();
             console.log("Call to sync took " + (t1 - t0) + " milliseconds.");
-        } else if(json_res.hasOwnProperty('is_synced') && json_res.is_synced) {
-            console.log('Synced!')
-        } else {
-            console.log(`Misformed response. ${json_res}`)
         }
     }
 
@@ -142,7 +155,7 @@ class Checker {
                 headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
                 body: check_delay_body
             }
-            console.log(check_delay_url,request_content)
+            console.log(check_delay_url, request_content)
             const res = await fetch(check_delay_url, request_content)
             const json_res = await res.json()
             if (json_res.hasOwnProperty('delay')) {
