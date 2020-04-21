@@ -10,7 +10,6 @@ function App() {
      */
     
      const skip_sync = document.getElementById('sync-check').checked
-     console.log(skip_sync)
      const checker = new Checker()
      await checker.syncSubtitles(skip_sync)
   };

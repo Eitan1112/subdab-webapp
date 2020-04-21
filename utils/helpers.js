@@ -1,28 +1,3 @@
-export const readVideoAsync = (element) => {
-    /**
-     * Read the video file and resolve the file content as ArrayBuffer object.
-     * 
-     * Params:
-     *      element (Element): The file input element to read from.
-     *
-     * Returns:
-     *    ArrayBuffer: Binary of the file.
-     */
-
-    return new Promise((resolve, reject) => {
-        let reader = new FileReader();
-
-        reader.onloadend = () => {
-            console.log("Load finished. Length: ", reader.result.length);
-            resolve(reader.result);
-        };
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(element.files[0]);
-    });
-}
-
 export const readSubtitlesAsync = (element) => {
     /**
      * Reads the subtitles file and resolves the subtitles file content.

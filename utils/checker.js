@@ -47,14 +47,12 @@ class Checker {
         console.log("Loading core...");
         await worker.load();
 
-        console.log("Reading binary...");
-        const binary = await Helpers.readVideoAsync(this.videoElement);
-
         const extension = this.videoElement.files[0].name.split('.')[1]
         this.filename = `video.${extension}`;
         console.log(`Filename: ${this.filename}`)
         console.log("Writing to fs...", this.filename);
-        await worker.write(this.filename, binary);
+        await worker.write(this.filename, document.getElementById('video-file').files[0]);
+        console.log('Setting worker variable...')
         this.worker = worker
     }
 
@@ -68,7 +66,9 @@ class Checker {
          */
 
         var t0 = performance.now();
+        console.log('Preparing...')
         await this.prepare()
+        console.log('Finished preparing...')
         if (!skip_sync) {
             const json_res = await this.checkSync()
             if (json_res.hasOwnProperty('error')) {
