@@ -1,13 +1,20 @@
-.howItWorks {
+.messageBox {
     padding  : 0px 50px;
     font-size: 20px;
 }
 
-.howItWorkInnerGrid {
+.messageBoxInnerGrid {
     background-color: #eee;
     padding         : 1px 10px 3px 10px
 }
 
-.howItWorks h3 {
+.messageBoxInnerGrid h3 {
     text-align: center;
+}
+
+.messageBoxMobile {
+    text-align: center;
+    font-size: 18px;
+    background-color: #eee;
+    border-radius: 10px;
 }

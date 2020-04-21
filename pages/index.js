@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import Checker from '../utils/checker'
+import React from "react";
 import styles from './index.module.css'
 import Header from '../components/header'
 import Form from '../components/form'
