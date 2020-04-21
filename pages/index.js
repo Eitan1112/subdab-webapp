@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import SubtitlesParser from "../utils/subtitleParser";
 import Checker from '../utils/checker'
-import * as Constants from '../constants'
+import styles from './index.module.css'
+import Header from '../components/header'
 
-function App() {
+const App = () => {
   const sync = async () => {
     /**
      * Main entry function for syncing the subtitles.
@@ -15,7 +15,8 @@ function App() {
   };
 
   return (
-    <div className="App" id="app">
+    <div class={styles.App} id="app">
+    <Header />
       <p />
       <span>Video: </span>
       <input type="file" id="video-file"></input>

@@ -1,0 +1,15 @@
+.container img {
+  height: 200px; 
+  margin: auto;
+  display: block;
+}
+
+.container h3 {
+  margin: auto;
+  display: block;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
