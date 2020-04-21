@@ -1,4 +1,4 @@
-import { createWorker, setLogging } from "@ffmpeg/ffmpeg";
+import { createWorker } from "@ffmpeg/ffmpeg";
 import *  as Helpers from './helpers'
 import * as Constants from '../constants'
 import SubtitlesParser from './subtitleParser'
@@ -14,46 +14,65 @@ class Checker {
      *      worker (Worker): The ffmpeg worker.
      *      sp (SubtitleParser): The subtitle parser object. (Only loads after prepare is called).
      *      filename (String): The video filename. (Only loads after prepare is called).
+     *      setProgress (function): Function to set the progress.
+     *      setMessage (function): Function to set message for the client.
+     *      setError (function): Function to set error for the client.
      */
 
-    constructor() {
+    constructor(setProgress, setMessage, setError) {
         /**
          * Constructor for Readers class.
+         * 
+         * Params:
+         *      setProgress (function): Function to set the progress.
+         *      setMessage (function): Function to set message for the client.
+         *      setError (function): Function to set error for the client.
          */
 
-        this.subsElement = document.getElementById('subtitles-file');
-        this.videoElement = document.getElementById('video-file');
+        this.subsFile = (Array.from(document.querySelector('input[type="file"]').files).filter((file) => file.type.split('/')[0] !== 'video'))[0];
+        this.videoFile = (Array.from(document.querySelector('input[type="file"]').files).filter((file) => file.type.split('/')[0] === 'video'))[0];
         this.sp = undefined
         this.filename = undefined
+        this.setProgress = setProgress
+        this.setMessage = setMessage
+        this.setError = setError
     }
 
     async prepare() {
         /**
          * Prepares the Checker instance for checking delay or sync by loading the ffmpeg-core,
          * reading the binary file and writing it to the file system, and reading and parsing the subtitles.
+         * 
+         * Params:
+         *      setProgress (function): Function to set the progress.
+         * 
          */
 
-        if (!this.subsElement.files || !this.videoElement.files) {
-            throw Error('Please upload both files.')
-        }
-
-        const subtitles = await Helpers.readSubtitlesAsync(this.subsElement)
+        const subtitles = await Helpers.readSubtitlesAsync(this.subsFile)
         this.sp = new SubtitlesParser(subtitles)
-
+        this.setProgress(3)
         const worker = createWorker({
             logger: ({ message }) => console.log(message),
         });
-
-        console.log("Loading core...");
+        this.setMessage('Loading video editor...')
         await worker.load();
-
-        const extension = this.videoElement.files[0].name.split('.')[1]
+        this.setProgress(15)
+        const extension = this.videoFile.name.split('.')[1]
         this.filename = `video.${extension}`;
-        console.log(`Filename: ${this.filename}`)
-        console.log("Writing to fs...", this.filename);
-        await worker.write(this.filename, document.getElementById('video-file').files[0]);
-        console.log('Setting worker variable...')
+        this.setMessage('Transcoding file...')
+        await worker.write(this.filename, this.videoFile);
+        this.setProgress(17)
         this.worker = worker
+    }
+
+    async set_download(element) {
+        /**
+         * Sets the download file element with downloading the new subtitles
+         */
+
+        const new_filename = this.filename.split('.')[0] + '.srt'
+        this.sp.set_download(element, new_filename, delay)
+
     }
 
     async syncSubtitles(skip_sync) {
@@ -80,8 +99,6 @@ class Checker {
                 let start = json_res.send_timestamp.start
                 let end = json_res.send_timestamp.end
                 const delay = await this.checkDelay(start, end)
-                const new_filename = this.filename.split('.')[0] + '.srt'
-                this.sp.download_subtitles(new_filename, delay)
                 var t1 = performance.now();
                 console.log("Call to sync took " + (t1 - t0) + " milliseconds.");
             } else if (json_res.hasOwnProperty('is_synced') && json_res.is_synced) {
@@ -121,13 +138,15 @@ class Checker {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: json_data
         }
+        this.setMessage('Checking if synced...')
         const res = await fetch(check_sync_url, request_content)
+        this.setProgress(50)
 
         const json_res = await res.json()
-        return json_res
+        return json_res.is_synced
     }
 
-    async checkDelay(start, end) {
+    async checkDelay(start = 0, end = Constants.DEFAULT_SECTION_LENGTH) {
         /**
          * Checks the delay of the subtitles compared to the video.
          * 
@@ -140,33 +159,36 @@ class Checker {
          */
         let delay = undefined
 
-        while (!delay) {
-            const buffer = await this.trimVideo(start, end)
-            const base64str = Helpers.arrayBufferToBase64(buffer)
-            const check_delay_url = Constants.SERVER + Constants.CHECK_DELAY_ROUTE
-            const check_delay_body = JSON.stringify({
-                base64str,
-                timestamp: { start, end },
-                subtitles: this.sp.subtitles,
-                extension: this.filename.split('.')[1]
-            })
-            const request_content = {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                body: check_delay_body
-            }
-            console.log(check_delay_url, request_content)
-            const res = await fetch(check_delay_url, request_content)
-            const json_res = await res.json()
-            if (json_res.hasOwnProperty('delay')) {
-                delay = json_res.delay
-            } else if (json_res.hasOwnProperty('send_timestamp')) {
-                start = json_res.send_timestamp.start
-                end = json_res.send_timestamp.end
-            }
+        const buffer = await this.trimVideo(start, end)
+        const base64str = Helpers.arrayBufferToBase64(buffer)
+        const check_delay_url = Constants.SERVER + Constants.CHECK_DELAY_ROUTE
+        const check_delay_body = JSON.stringify({
+            base64str,
+            timestamp: { start, end },
+            subtitles: this.sp.subtitles,
+            extension: this.filename.split('.')[1]
+        })
+        const request_content = {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: check_delay_body
         }
-        return delay
+        this.setMessage('Checking delay...')
+        const res = await fetch(check_delay_url, request_content)
+        if(res.status !== 200) {
+            return this.setError('Error occured - unable to find delay.')
+        }
+
+        const json_res = await res.json()
+        if (json_res.hasOwnProperty('delay')) {
+            return json_res.delay
+        } else {
+            const new_start = start + Constants.DEFAULT_SECTION_LENGTH
+            const new_end = end+ Constants.DEFAULT_SECTION_LENGTH
+            return this.checkDelay(start, end)
+        }
     }
+
 
 
     async getBuffersAndTimestamps(subtitles_timestamps) {
@@ -181,11 +203,14 @@ class Checker {
          */
 
         let data = [];
-        console.log(`Triming.. filename: ${this.filename}`);
-
+        
+        this.setMessage('Trimming video...')
+        let i = 1
         for (const [subtitles, start, end] of subtitles_timestamps) {
             const buffer = await this.trimVideo(start, end);
             data.push([Helpers.arrayBufferToBase64(buffer), subtitles]);
+            this.setProgress(17 + i)
+            i++
         }
         return data;
     }

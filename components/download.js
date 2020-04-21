@@ -7,14 +7,18 @@ const Download = (props) => (
         <Grid container>
             <Grid item md={4}></Grid>
             <Grid item md={2}>
-                <button className={formStyles.formButton}>
-                    Download Subtitles
-                </button>
+                <a id="download">
+                    <button className={formStyles.formButton}>
+                        Download Subtitles
+                    </button>
+                </a>
             </Grid>
             <Grid item md={2}>
-                <button className={formStyles.formButton}>
-                    View <br />Sample
-                </button>
+                <a>
+                    <button className={formStyles.formButton}>
+                        View Sample
+                    </button>
+                </a>
             </Grid>
         </Grid>
     </Hidden>

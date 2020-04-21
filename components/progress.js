@@ -9,14 +9,14 @@ const Progress = (props) => (
             <Grid container className={styles.statusContainer}>
                 <Grid item md={4}></Grid>
                 <Grid item md={4}>
-                    <LinearProgress variant="determinate" value={props.status} />
+                    <LinearProgress variant="determinate" value={props.progress} />
                 </Grid>
             </Grid>
             <Grid container>
                 <Grid item md={4}></Grid>
                 <Grid item md={2}>
                     <h3>
-                        Progress: {props.status}%
+                        Progress: {props.progress}%
                     </h3>
                 </Grid>
                 <Grid item md={2} className={styles.message}>

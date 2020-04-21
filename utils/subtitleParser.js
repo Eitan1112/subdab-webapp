@@ -22,7 +22,7 @@ class SubtitlesParser {
     this.re_subs = Array.from(this.subtitles.matchAll(regex));
   }
 
-  download_subtitles(filename, delay) {
+  setDownload(element, filename, delay) {
     /**
      * Downloads newly generated subtitles file based on the delay.
      * 
@@ -30,17 +30,10 @@ class SubtitlesParser {
      *    filename (String): The video filename.
      *    delay (float): The delay.
      */
+
     const new_subtitles = this.generate_new_subtitles(delay)
-    const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(new_subtitles));
     element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
   }
 
 

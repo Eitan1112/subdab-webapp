@@ -1,9 +1,9 @@
-export const readSubtitlesAsync = (element) => {
+export const readSubtitlesAsync = (file) => {
     /**
      * Reads the subtitles file and resolves the subtitles file content.
      * 
      * Params:
-     *      element (Element): The file input element to read from.
+     *      file (File): The file to read from.
      *
      * Returns:
      *    string: The subtitles.
@@ -18,7 +18,7 @@ export const readSubtitlesAsync = (element) => {
 
         reader.onerror = reject;
 
-        reader.readAsText(element.files[0]);
+        reader.readAsText(file);
     });
 }
 
