@@ -1,4 +1,9 @@
 * {
     font-family: Calibri;
     color: #303030;
+    font-weight: 300;
+}
+
+.MuiSvgIcon-root {
+    margin-top: -5px;
 }
