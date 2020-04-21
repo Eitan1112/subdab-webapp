@@ -1,0 +1,13 @@
+.howItWorks {
+    padding  : 0px 50px;
+    font-size: 20px;
+}
+
+.howItWorkInnerGrid {
+    background-color: #eee;
+    padding         : 1px 10px 3px 10px
+}
+
+.howItWorks h3 {
+    text-align: center;
+}

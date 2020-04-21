@@ -2,7 +2,7 @@ import { DropzoneArea } from 'material-ui-dropzone'
 import Hidden from '@material-ui/core/Hidden'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import styles from './form.module.css'
+import styles from './upload.module.css'
 
 const Upload = () => (
     <div>
@@ -21,10 +21,9 @@ const Upload = () => (
 
         {/* XS-DM Screens */}
         <Hidden lgUp>
-            <Grid container>
-            <Grid item xs={1}></Grid>                
+            <Grid container>          
                 {/* Video Upload Button */}
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <input
                         accept="video/*"
                         id="video-button-file"
@@ -38,9 +37,8 @@ const Upload = () => (
                     </label>
 
                 </Grid>
-                <Grid item xs={1}></Grid>
                 {/* Subtitles Upload Button */}
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <input
                         accept=""
                         id="subtitles-button-file"

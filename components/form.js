@@ -5,32 +5,48 @@ import { HowItWorks, TimeItTakes } from './messageBoxes'
 import Start from './start'
 import Progress from './progress'
 import Download from './download'
+import { useState } from 'react'
 
 
-const Form = () => (
-    <Grid container className={styles.container}>
-        {/* Message boxes and upload files input */}
-        <Grid container>
-            <Grid item md={0} lg={0} xl={1}></Grid>
-            <Grid item md={4} xl={3} className={styles.howItWorks}>
-                <Grid className={styles.howItWorkInnerGrid}>
-                    <HowItWorks />
+const Form = () => {
+    const hiddenOnly = ['xs', 'sm', 'md', 'lg', 'xl']
+
+    const [progressOnly, setProgressOnly] = useState(hiddenOnly)
+    const [downloadOnly, setDownloadOnly] = useState(hiddenOnly)
+    const [message, setMessage] = useState('Waiting to start')
+    const [checked, setChecked] = useState(true);
+
+    const handleChange = (event) => {
+        setChecked(event.target.checked);
+    };
+
+    const sync = async () => {
+        /**
+         * Main entry function for syncing the subtitles.
+         */
+
+        setProgressOnly([])
+        const skip_sync = document.getElementById('sync-check').checked
+        const checker = new Checker()
+        await checker.syncSubtitles(skip_sync)
+    };
+
+    return (
+        <Grid container className={styles.container}>
+            {/* Message boxes and upload files input */}
+            <Grid container>
+                <Grid item md={0} lg={0} xl={1}></Grid>
+                <HowItWorks />
+                <Grid item md={4} xs={12}>
+                    <Upload></Upload>
                 </Grid>
+                <TimeItTakes />
             </Grid>
-            <Grid item md={4} xs={12}>
-                <Upload></Upload>
-            </Grid>
-            <Grid item md={3} lg={4} xl={3} className={styles.howItWorks}>
-                <Grid className={styles.howItWorkInnerGrid}>
-                    <TimeItTakes />
-                </Grid>
-            </Grid>
+            <Start sync={sync} handleChange={handleChange} />
+            <Progress only={progressOnly} status={0} message={message} />
+            <Download only={downloadOnly} />
         </Grid>
-        <Start />
-        <Progress />
-        <Download />
-
-    </Grid>
-)
+    )
+}
 
 export default Form

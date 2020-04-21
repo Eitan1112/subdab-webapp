@@ -2,24 +2,6 @@
     margin-top: 15px;
 }
 
-.checkSync {
-    font-size: 20px;
-}
-
-.howItWorks {
-    padding  : 0px 50px;
-    font-size: 20px;
-}
-
-.howItWorkInnerGrid {
-    background-color: #eee;
-    padding         : 1px 10px 3px 10px
-}
-
-.howItWorks h3 {
-    text-align: center;
-}
-
 .formButton {
     background-color: #303030;
     border          : 0px;
@@ -37,31 +19,4 @@
     background-color: #404040;
     transition      : background-color 0.2s;
     cursor          : pointer;
-}
-
-.statusContainer {
-    margin-top:10px;
-}
-
-.download {
-    border: none;
-    padding: 20px;
-    font-size: 16px;
-}
-
-.message {
-    text-align: right
-}
-
-.fileInput {
-    display: None;
-}
-
-.fileInputLabel {
-    width: 10%;
-    display: block;
-    margin: auto;
-    text-align: center;
-    border: 1px solid #303030;
-    border-radius: 10px;
 }
