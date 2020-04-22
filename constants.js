@@ -6,3 +6,7 @@ export const DEFAULT_SECTION_LENGTH = 200
 export const SERVER = 'http://localhost:5000'
 export const CHECK_SYNC_ROUTE = '/check_sync'
 export const CHECK_DELAY_ROUTE = '/check_delay'
+
+// Sample View
+export const START_INDEX = 5
+export const END_INDEX = 10

@@ -9,6 +9,7 @@ import { useState } from 'react'
 import Checker from '../utils/checker'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert';
+import SubtitlesParser from '../utils/subtitleParser';
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -27,13 +28,15 @@ const Form = (props) => {
     const [message, setMessage] = useState('Waiting to start')
     const [checked, setChecked] = useState(true);
     const [startDisabled, setStartDisabled] = useState(false)
+    const [videoSrc, setVideoSrc] = useState('')
+    const [subSrc, setSubSrc] = useState('')
 
     const handleSuccessClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
 
-        setSuccessOpen(false);
+        setSuccessOpen(false)
     };
 
     const handleErrorClose = (event, reason) => {
@@ -49,9 +52,11 @@ const Form = (props) => {
     };
 
     const alertSuccess = (msg) => {
+        setMessage('Finished')
         setSuccess(msg)
         setSuccessOpen(true)
         setStartDisabled(false)
+        setProgress(100)
         props.setRunning(false)
     }
 
@@ -61,6 +66,7 @@ const Form = (props) => {
         setStartDisabled(false)
         props.setRunning(false)
         setProgress(0)
+        setMessage('Waiting to start...')
     }
     const validate = () => {
         /**
@@ -82,7 +88,6 @@ const Form = (props) => {
             return { validated: false, error: 'Please upload one video file and one subtitles file.' }
         }
         if (subsElement === undefined || subsElement.type !== '') {
-            console.log(subsElement.type)
             return { validated: false, error: 'Please upload a valid subtitles file.' }
 
         }
@@ -104,7 +109,13 @@ const Form = (props) => {
         const checker = new Checker(setProgress, setMessage, alertError)
         setStartDisabled(true)
         props.setRunning(true)
-        await checker.prepare()
+
+        try {
+            await checker.prepare()
+        } catch (err) {
+            alertError(`Unexpect error: ${err}`)
+            return
+        }
 
         if (checked) { // If to check sync first
             let is_synced
@@ -131,12 +142,16 @@ const Form = (props) => {
         if (!delay) {
             return alertError('Unable to find delay.')
         }
-        setMessage('Found delay')
-        setProgress(100)
+
+        alertSuccess('Finished')
         setDownloadOnly([])
-        const new_filename = checker.filename.split('.')[0] + '.srt'
+        const new_filename = checker.videoFile.name.split('.').slice(0, -1).join() + '.srt'
         const download_ele = document.getElementById('download')
         checker.sp.setDownload(download_ele, new_filename, delay)
+        const subSrcResult = checker.sp.setUrl()
+        setSubSrc(subSrcResult)
+        const videoSrcResult = await checker.setUrl()
+        setVideoSrc(videoSrcResult)
     };
 
     return (
@@ -152,7 +167,7 @@ const Form = (props) => {
             </Grid>
             <Start sync={sync} handleChange={handleChange} disabled={startDisabled} />
             <Progress only={progressOnly} progress={progress} message={message} />
-            <Download only={downloadOnly} />
+            <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} />
             <HowItWorksMobile />
 
             {/* Alerts */}

@@ -5,8 +5,10 @@ class SubtitlesParser {
    * Class for parsing the subtitles.
    *
    * Attributes:
-   *       re_subs (array): Array of arrays containing the subtitles in groups.
    *       subtitles (string): The subtitles
+   *       re_subs (array): Array of arrays containing the subtitles in groups.
+   *       synced_subtitles (string): When finds synced subtitles.
+   *       re_synced_subtitles (array): Array of arrays containing the synced subtitles in groups.
    */
 
   constructor(subtitles) {
@@ -69,8 +71,11 @@ class SubtitlesParser {
       const new_row = `${start_time} --> ${end_time}\r\n`
       new_subtitles += new_row
     }
+    // Set synced subtitles
+    this.synced_subtitles = new_subtitles
+    const regex = /(\d+)\r\n(\d\d:\d\d:\d\d,\d\d\d) --> (\d\d:\d\d:\d\d,\d\d\d)\r\n((?:.+\n)*.+)/gm;
+    this.re_synced_subtitles = Array.from(new_subtitles.matchAll(regex));
 
-    console.log(new_subtitles)
     return new_subtitles
   }
 
@@ -87,7 +92,7 @@ class SubtitlesParser {
     const subs_length = this.re_subs.length;
 
     // If there are less rows then the desired amount to check -> Abort
-    if(subs_length < Constants.MIN_VALID_INDEXES) {
+    if (subs_length < Constants.MIN_VALID_INDEXES) {
       throw "Subtitles are too short.";
     }
 
@@ -205,7 +210,7 @@ class SubtitlesParser {
      */
 
     if (seconds > 362439.999) {
-      throw Error('Failed to convert seconds time. Number too large.')
+      throw 'Failed to convert seconds time. Number too large.'
     }
 
     const hours = String((Math.floor(seconds / 3600))).padStart(2, '0')
@@ -239,6 +244,24 @@ class SubtitlesParser {
     const new_time = this.convert_seconds_time(time_in_seconds)
     return new_time
   }
+
+  setUrl(setUrl) {
+    /**
+     * Sets url for the first six subtitles and sets the url, and returns the start and end time of the subs and the url.
+     * 
+     * Returns:
+     *    String: The url to the subtitles.
+     */
+
+    // Convert to vvt format
+    let subs = 'WEBVTT\r\n\r\n' + this.synced_subtitles
+    subs = subs.replace(/,/g, '.')
+
+    // Create file
+    const subSrc = URL.createObjectURL(new Blob([subs], { type: 'text/vtt' }))
+    return subSrc
+  }
 }
 
 export default SubtitlesParser;
+

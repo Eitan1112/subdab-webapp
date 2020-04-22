@@ -58,7 +58,8 @@ class Checker {
         this.setMessage('Loading video editor...')
         await worker.load();
         this.setProgress(15)
-        this.filename = this.videoFile.name
+        this.extension = this.videoFile.name.split('.').slice(-1)[0]
+        this.filename = `video.${this.extension}`
         this.setMessage('Writing file for editing...')
         await worker.write(this.filename, this.videoFile);
         this.setProgress(18)
@@ -88,7 +89,7 @@ class Checker {
         const data = await this.getBuffersAndTimestamps(valid_subtitles_timestamps)
         const json_data = JSON.stringify({
             data,
-            extension: this.filename.split('.')[1]
+            extension: this.extension
         })
         const check_sync_url = Constants.SERVER + Constants.CHECK_SYNC_ROUTE
         const request_content = {
@@ -119,9 +120,9 @@ class Checker {
         const iteration = start / Constants.DEFAULT_SECTION_LENGTH
 
         // Progres: First iteration: 50, Second: 70, Third: 80, Fourth: 85, Fifth: 87.5 etc.
-        let progress = 50 + Math.floor([...Array(iteration).keys()].map((num) => 20 / Math.pow(2, num)).reduce((a,b) => a + b, 0))
-        const step = (20 / Math.pow(2, iteration))        
-        
+        let progress = 50 + Math.floor([...Array(iteration).keys()].map((num) => 20 / Math.pow(2, num)).reduce((a, b) => a + b, 0))
+        const step = (20 / Math.pow(2, iteration))
+
         const buffer = await this.trimVideo(start, end)
         const base64str = Helpers.arrayBufferToBase64(buffer)
         this.setProgress(Math.floor(progress + (step / 3)))
@@ -130,7 +131,7 @@ class Checker {
             base64str,
             timestamp: { start, end },
             subtitles: this.sp.subtitles,
-            extension: this.filename.split('.')[1]
+            extension: this.extension
         })
         const request_content = {
             method: 'POST',
@@ -191,11 +192,25 @@ class Checker {
          *       string: The buffer of the file.
          */
 
-        const trimed_filename = "trimed." + this.filename.split(".")[1]; // trimed.extension
+        const trimed_filename = "trimed." + this.extension; // trimed.extension
         await this.worker.trim(this.filename, trimed_filename, start, end, "-c copy -y");
         const { data } = await this.worker.read(trimed_filename);
         await this.worker.remove(trimed_filename);
         return data.buffer;
+    }
+
+    async setUrl() {
+        /**
+         * Sets and returns URL for the video.
+         * 
+         * Returns:
+         *      String: The url
+         */
+
+        const { data } = await this.worker.read(this.filename)
+        console.log(`Type: video/${this.extension}`, data)
+        const url = URL.createObjectURL(new Blob([data.buffer], { type: `video/${this.extension}` }));
+        return url
     }
 }
 

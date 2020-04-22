@@ -1,0 +1,43 @@
+.container {
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.modalBody h1 {
+    color: white;
+}
+
+.modalBody {
+    text-align: center;
+    background-color: #303030;
+    padding-bottom: 10px;
+    
+}
+
+.button {
+    width: 95% !important;
+    margin: auto;
+    display: block;
+    background-color: #eee;
+    color: #303030;
+    border: 0px;
+    border-radius: 5px;
+    font-size: 20px;
+    padding: 10px 0px;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.button:hover{
+    background-color: #ccc;
+    cursor: pointer;
+    transition: background-color 0.2s
+}
+
+.video {
+    max-height: 300px;
+    max-width: 400px;
+}
