@@ -86,7 +86,10 @@ class SubtitlesParser {
     // Gets number of rows in the subtitles
     const subs_length = this.re_subs.length;
 
-    // If there are less rows then the desired amount to check -> Set it to the number of rows
+    // If there are less rows then the desired amount to check -> Abort
+    if(subs_length < Constants.MIN_VALID_INDEXES) {
+      throw "Subtitles are too short.";
+    }
 
     // Gets random indexes from the range
     //indexes_to_check = random.sample(range(1, subs_length), samples_to_check)
@@ -96,7 +99,7 @@ class SubtitlesParser {
     while (subtitles_timestamps.length < Constants.MIN_VALID_INDEXES) {
       // If checked all the numbers in the range and not enough found valid -> Abort
       if (indexes_checked.length >= subs_length) {
-        return alert("Unable to find enough samples to test.");
+        throw "Unable to find enough samples to test.";
       }
 
       // Get random index in range 1 to subs_length

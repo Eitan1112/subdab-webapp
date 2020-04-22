@@ -4,7 +4,6 @@ import styles from './upload.module.css'
 const Upload = () => (
     <div>
         <DropzoneArea
-            onChange={() => console.log('Hey')}
             acceptedFiles={['video/*', '', 'plain/text']}
             maxFileSize={10737418240}
             showFileNames={true}

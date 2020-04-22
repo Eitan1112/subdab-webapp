@@ -51,15 +51,14 @@ const Form = () => {
     const alertSuccess = (msg) => {
         setSuccess(msg)
         setSuccessOpen(true)
-        setMessage(msg)
         setStartDisabled(false)
     }
 
     const alertError = (msg) => {
         setError(msg)
         setErrorOpen(true)
-        setMessage(msg)
         setStartDisabled(false)
+        setProgress(0)
     }
     const validate = () => {
         /**
@@ -105,7 +104,13 @@ const Form = () => {
         await checker.prepare()
 
         if (checked) { // If to check sync first
-            const is_synced = await checker.checkSync()
+            let is_synced
+            try {
+                is_synced = await checker.checkSync()
+            } catch (err) {
+                alertError(`Unexpected error while checking sync: ${err}`)
+                return
+            }
             if (is_synced) {
                 setProgress(100)
                 return alertSuccess('The subtitles and video are already synced!')
@@ -113,7 +118,13 @@ const Form = () => {
         }
 
         setMessage('Subtitles are not synced with video.')
-        const delay = await checker.checkDelay()
+        let delay
+        try {
+            delay = await checker.checkDelay()
+        } catch (err) {
+            alertError(`Unexpected error while checking delay: ${err}`)
+            return
+        }
         if (!delay) {
             return alertError('Unable to find delay.')
         }
@@ -129,7 +140,7 @@ const Form = () => {
         <Grid container className={styles.container}>
             {/* Message boxes and upload files input */}
             <Grid container>
-                <Grid item md={0} lg={0} xl={1}></Grid>
+                <Grid item md={false} lg={false} xl={1}></Grid>
                 <HowItWorks />
                 <Grid item lg={4} xs={12}>
                     <Upload></Upload>

@@ -118,6 +118,7 @@ class Checker {
         let delay = undefined
         const iteration = start / Constants.DEFAULT_SECTION_LENGTH
 
+        // Progres: First iteration: 50, Second: 70, Third: 80, Fourth: 85, Fifth: 87.5 etc.
         let progress = 50 + Math.floor([...Array(iteration).keys()].map((num) => 20 / Math.pow(2, num)).reduce((a,b) => a + b, 0))
         const step = (20 / Math.pow(2, iteration))        
         

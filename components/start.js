@@ -8,7 +8,7 @@ const Start = (props) => (
     <Grid container>
         {/* Check Sync button */}
         <Grid container>
-            <Grid item xs={0} lg={4}></Grid>
+            <Grid item xs={false} lg={4}></Grid>
             <Grid item xs={12} lg={4}>
                 <Checkbox
                     defaultChecked={true}
@@ -22,7 +22,7 @@ const Start = (props) => (
         </Grid>
         {/* Start button */}
         <Grid container>
-            <Grid item lg={4} xs={0}></Grid>
+            <Grid item lg={4} xs={false}></Grid>
             <Grid item lg={4} xs={12}>
                 <button disabled={props.disabled} onClick={props.disabled ? null : props.sync} className={formStyles.formButton}>Start</button>
             </Grid>
