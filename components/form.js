@@ -28,6 +28,22 @@ const Form = () => {
     const [checked, setChecked] = useState(true);
     const [startDisabled, setStartDisabled] = useState(false)
 
+    const handleSuccessClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSuccessOpen(false);
+    };
+
+    const handleErrorClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setErrorOpen(false);
+    };
+
     const handleChange = (event) => {
         setChecked(event.target.checked);
     };
@@ -95,7 +111,7 @@ const Form = () => {
                 return alertSuccess('The subtitles and video are already synced!')
             }
         }
-        
+
         setMessage('Subtitles are not synced with video.')
         const delay = await checker.checkDelay()
         if (!delay) {
@@ -120,20 +136,20 @@ const Form = () => {
                 </Grid>
                 <TimeItTakes />
             </Grid>
-            <Start sync={sync} handleChange={handleChange} disabled={startDisabled}/>
+            <Start sync={sync} handleChange={handleChange} disabled={startDisabled} />
             <Progress only={progressOnly} progress={progress} message={message} />
             <Download only={downloadOnly} />
             <HowItWorksMobile />
 
             {/* Alerts */}
             <TimeItTakesMobile />
-            <Snackbar open={errorOpen} autoHideDuration={9000} >
-                <Alert severity="error">
+            <Snackbar open={errorOpen} className={styles.alert} autoHideDuration={9000} onClose={handleErrorClose}>
+                <Alert severity="error" onClose={handleErrorClose}>
                     {error}
                 </Alert>
             </Snackbar>
-            <Snackbar open={successOpen} autoHideDuration={6000} >
-                <Alert severity="success">
+            <Snackbar open={successOpen} className={styles.alert} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert severity="success" onClose={handleSuccessClose}>
                     {success}
                 </Alert>
             </Snackbar>

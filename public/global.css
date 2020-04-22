@@ -11,3 +11,7 @@
 .MuiGrid-root {
     margin-bottom: 3px;
 }
+
+.MuiAlert-message {
+    font-size: 22px;
+}
