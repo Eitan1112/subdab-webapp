@@ -1,7 +1,11 @@
+.container {
+    z-index: 10
+}
+
 .checkSync {
     font-size: 20px;
 }
 
-.checkbox {
-    z-index: 10
+.checkSync:hover {
+    cursor: pointer;
 }

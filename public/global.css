@@ -15,3 +15,8 @@
 .MuiAlert-message {
     font-size: 22px;
 }
+
+.MuiTooltip-popper *, .MuiTooltip-popperArrow * {
+    font-size: 16px !important;
+    background-color: #303030 !important;
+}

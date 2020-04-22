@@ -14,7 +14,7 @@ const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Form = () => {
+const Form = (props) => {
     const hiddenOnly = ['xs', 'sm', 'md', 'lg', 'xl']
 
     const [progressOnly, setProgressOnly] = useState(hiddenOnly)
@@ -52,12 +52,14 @@ const Form = () => {
         setSuccess(msg)
         setSuccessOpen(true)
         setStartDisabled(false)
+        props.setRunning(false)
     }
 
     const alertError = (msg) => {
         setError(msg)
         setErrorOpen(true)
         setStartDisabled(false)
+        props.setRunning(false)
         setProgress(0)
     }
     const validate = () => {
@@ -101,6 +103,7 @@ const Form = () => {
 
         const checker = new Checker(setProgress, setMessage, alertError)
         setStartDisabled(true)
+        props.setRunning(true)
         await checker.prepare()
 
         if (checked) { // If to check sync first
