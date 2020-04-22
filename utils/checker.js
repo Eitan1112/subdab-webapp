@@ -54,14 +54,14 @@ class Checker {
         const worker = createWorker({
             logger: ({ message }) => console.log(message),
         });
+        this.setProgress(5)
         this.setMessage('Loading video editor...')
         await worker.load();
         this.setProgress(15)
-        const extension = this.videoFile.name.split('.')[1]
-        this.filename = `video.${extension}`;
-        this.setMessage('Transcoding file...')
+        this.filename = this.videoFile.name
+        this.setMessage('Writing file for editing...')
         await worker.write(this.filename, this.videoFile);
-        this.setProgress(17)
+        this.setProgress(18)
         this.worker = worker
     }
 
@@ -73,48 +73,6 @@ class Checker {
         const new_filename = this.filename.split('.')[0] + '.srt'
         this.sp.set_download(element, new_filename, delay)
 
-    }
-
-    async syncSubtitles(skip_sync) {
-        /**
-         * The main entry point which checks the sync of video and subtitles, and if they
-         * are not synced -> checks delay and downloads new subtitles file.
-         * 
-         * Params:
-         *      skip_sync (bool): If to skip the sync check (jump to delay check)
-         */
-
-        var t0 = performance.now();
-        console.log('Preparing...')
-        await this.prepare()
-        console.log('Finished preparing...')
-        if (!skip_sync) {
-            const json_res = await this.checkSync()
-            if (json_res.hasOwnProperty('error')) {
-                console.log(`Error: ${json_res.error}`)
-                return
-            }
-            if (json_res.hasOwnProperty('is_synced') && !json_res.is_synced) {
-                console.log('Checking delay')
-                let start = json_res.send_timestamp.start
-                let end = json_res.send_timestamp.end
-                const delay = await this.checkDelay(start, end)
-                var t1 = performance.now();
-                console.log("Call to sync took " + (t1 - t0) + " milliseconds.");
-            } else if (json_res.hasOwnProperty('is_synced') && json_res.is_synced) {
-                console.log('Synced!')
-            } else {
-                console.log(`Misformed response. ${json_res}`)
-            }
-        } else {
-            let start = 0
-            let end = Constants.DEFAULT_SECTION_LENGTH
-            const delay = await this.checkDelay(start, end)
-            const new_filename = this.filename.split('.')[0] + '.srt'
-            this.sp.download_subtitles(new_filename, delay)
-            var t1 = performance.now();
-            console.log("Call to sync took " + (t1 - t0) + " milliseconds.");
-        }
     }
 
     async checkSync() {
@@ -141,7 +99,6 @@ class Checker {
         this.setMessage('Checking if synced...')
         const res = await fetch(check_sync_url, request_content)
         this.setProgress(50)
-
         const json_res = await res.json()
         return json_res.is_synced
     }
@@ -157,10 +114,16 @@ class Checker {
          * Returns:
          *      delay (float): The delay.
          */
-        let delay = undefined
 
+        let delay = undefined
+        const iteration = start / Constants.DEFAULT_SECTION_LENGTH
+
+        let progress = 50 + Math.floor([...Array(iteration).keys()].map((num) => 20 / Math.pow(2, num)).reduce((a,b) => a + b, 0))
+        const step = (20 / Math.pow(2, iteration))        
+        
         const buffer = await this.trimVideo(start, end)
         const base64str = Helpers.arrayBufferToBase64(buffer)
+        this.setProgress(Math.floor(progress + (step / 3)))
         const check_delay_url = Constants.SERVER + Constants.CHECK_DELAY_ROUTE
         const check_delay_body = JSON.stringify({
             base64str,
@@ -175,7 +138,7 @@ class Checker {
         }
         this.setMessage('Checking delay...')
         const res = await fetch(check_delay_url, request_content)
-        if(res.status !== 200) {
+        if (res.status !== 200) {
             return this.setError('Error occured - unable to find delay.')
         }
 
@@ -184,11 +147,11 @@ class Checker {
             return json_res.delay
         } else {
             const new_start = start + Constants.DEFAULT_SECTION_LENGTH
-            const new_end = end+ Constants.DEFAULT_SECTION_LENGTH
-            return this.checkDelay(start, end)
+            const new_end = end + Constants.DEFAULT_SECTION_LENGTH
+            this.setProgress(Math.floor(progress + step))
+            return this.checkDelay(new_start, new_end)
         }
     }
-
 
 
     async getBuffersAndTimestamps(subtitles_timestamps) {
@@ -203,7 +166,7 @@ class Checker {
          */
 
         let data = [];
-        
+
         this.setMessage('Trimming video...')
         let i = 1
         for (const [subtitles, start, end] of subtitles_timestamps) {

@@ -1,3 +1,12 @@
 .checkSync {
     font-size: 20px;
+    z-index: 10
+}
+
+.checkbox {
+    z-index: 10
+}
+
+.checkSyncWrapper {
+    z-index: 20;
 }

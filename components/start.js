@@ -12,6 +12,7 @@ const Start = (props) => (
             <Grid item xs={12} lg={4}>
                 <Checkbox
                     defaultChecked={true}
+                    className={styles.checkbox}
                     onClick={props.handleChange}
                     color="primary"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
@@ -23,7 +24,7 @@ const Start = (props) => (
         <Grid container>
             <Grid item lg={4} xs={0}></Grid>
             <Grid item lg={4} xs={12}>
-                <button onClick={props.sync} className={formStyles.formButton}>Start</button>
+                <button disabled={props.disabled} onClick={props.disabled ? null : props.sync} className={formStyles.formButton}>Start</button>
             </Grid>
         </Grid>
     </Grid>

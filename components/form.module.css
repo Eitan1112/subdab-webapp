@@ -20,3 +20,8 @@
     transition      : background-color 0.2s;
     cursor          : pointer;
 }
+
+.formButton:disabled {
+    cursor: not-allowed;
+    pointer-events: all !important;
+  }

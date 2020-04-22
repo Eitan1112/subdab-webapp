@@ -9,8 +9,6 @@ import { useState } from 'react'
 import Checker from '../utils/checker'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert';
-import * as Constants from '../constants'
-
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -28,6 +26,7 @@ const Form = () => {
     const [progress, setProgress] = useState(0)
     const [message, setMessage] = useState('Waiting to start')
     const [checked, setChecked] = useState(true);
+    const [startDisabled, setStartDisabled] = useState(false)
 
     const handleChange = (event) => {
         setChecked(event.target.checked);
@@ -36,11 +35,15 @@ const Form = () => {
     const alertSuccess = (msg) => {
         setSuccess(msg)
         setSuccessOpen(true)
+        setMessage(msg)
+        setStartDisabled(false)
     }
 
     const alertError = (msg) => {
         setError(msg)
         setErrorOpen(true)
+        setMessage(msg)
+        setStartDisabled(false)
     }
     const validate = () => {
         /**
@@ -58,8 +61,6 @@ const Form = () => {
         try {
             subsElement = (Array.from(document.querySelector('input[type="file"]').files).filter((file) => file.type.split('/')[0] !== 'video'))[0];
             videoElement = (Array.from(document.querySelector('input[type="file"]').files).filter((file) => file.type.split('/')[0] === 'video'))[0];
-            console.log(subsElement)
-            console.log(videoElement)
         } catch {
             return { validated: false, error: 'Please upload one video file and one subtitles file.' }
         }
@@ -81,20 +82,21 @@ const Form = () => {
             return alertError(validation.error)
         }
 
-        const t0 = performance.now()
         setProgressOnly([]) // Show progress
 
         const checker = new Checker(setProgress, setMessage, alertError)
+        setStartDisabled(true)
         await checker.prepare()
+
         if (checked) { // If to check sync first
             const is_synced = await checker.checkSync()
             if (is_synced) {
                 setProgress(100)
-                setMessage('The subtitles and video are already synced!')
                 return alertSuccess('The subtitles and video are already synced!')
             }
         }
-
+        
+        setMessage('Subtitles are not synced with video.')
         const delay = await checker.checkDelay()
         if (!delay) {
             return alertError('Unable to find delay.')
@@ -118,7 +120,7 @@ const Form = () => {
                 </Grid>
                 <TimeItTakes />
             </Grid>
-            <Start sync={sync} handleChange={handleChange} />
+            <Start sync={sync} handleChange={handleChange} disabled={startDisabled}/>
             <Progress only={progressOnly} progress={progress} message={message} />
             <Download only={downloadOnly} />
             <HowItWorksMobile />

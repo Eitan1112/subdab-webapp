@@ -1,6 +1,6 @@
 // Data
 export const MIN_VALID_INDEXES = 20
-export const DEFAULT_SECTION_LENGTH = 270
+export const DEFAULT_SECTION_LENGTH = 200
 
 // Routes
 export const SERVER = 'http://localhost:5000'

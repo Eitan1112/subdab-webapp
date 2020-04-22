@@ -1,4 +1,5 @@
 import { DropzoneArea } from 'material-ui-dropzone'
+import styles from './upload.module.css'
 
 const Upload = () => (
     <div>
