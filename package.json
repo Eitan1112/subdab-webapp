@@ -1,5 +1,5 @@
 {
-  "name": "Syncit-nextjs-frontend",
+  "name": "syncit",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production next start",
     "start-api": "cd ../syncit-backend && set FLASK_APP=syncit.api.py&& py -m flask run"
   }
 }

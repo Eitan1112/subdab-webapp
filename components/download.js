@@ -24,7 +24,7 @@ const Download = (props) => {
     return (
         <Hidden only={props.only}>
             <Grid container>
-                <Grid item xs={0} lg={4}></Grid>
+                <Grid item xs={false} lg={4}></Grid>
                 <Grid item xs={12} sm={6} lg={2}>
                     <a id="download">
                         <button className={[formStyles.formButton, styles.button].join(' ')}>

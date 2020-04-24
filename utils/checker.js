@@ -92,6 +92,7 @@ class Checker {
             data,
             extension: this.extension
         })
+        console.log('Server', this.server)
         const check_sync_url = this.server + Constants.CHECK_SYNC_ROUTE
         const request_content = {
             method: 'POST',
@@ -127,7 +128,7 @@ class Checker {
         const buffer = await this.trimVideo(start, end)
         const base64str = Helpers.arrayBufferToBase64(buffer)
         this.setProgress(Math.floor(progress + (step / 3)))
-        const check_delay_url = this.SERVER + Constants.CHECK_DELAY_ROUTE
+        const check_delay_url = this.server + Constants.CHECK_DELAY_ROUTE
         const check_delay_body = JSON.stringify({
             base64str,
             timestamp: { start, end },

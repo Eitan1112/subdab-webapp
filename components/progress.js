@@ -7,13 +7,13 @@ const Progress = (props) => (
     <Hidden only={props.only}>
         <Grid container>
             <Grid container className={styles.statusContainer}>
-                <Grid item xs={0} lg={4}></Grid>
+                <Grid item xs={false} lg={4}></Grid>
                 <Grid item xs={12} lg={4}>
                     <LinearProgress variant="determinate" value={props.progress} />
                 </Grid>
             </Grid>
             <Grid container>
-                <Grid item xs={0} lg={4}></Grid>
+                <Grid item xs={false} lg={4}></Grid>
                 <Grid item xs={6} lg={2}>
                     <h3>
                         Progress: {props.progress}%

@@ -16,7 +16,7 @@ const Modal = (props) => (
                     </video>
                 </Grid>
                 <Grid item xs={6}>
-                    <a id="download2">
+                    <a id="download-2">
                         <button className={styles.button}>
                             Download Subtitles
                             </button>

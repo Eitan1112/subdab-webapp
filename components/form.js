@@ -147,8 +147,7 @@ const Form = (props) => {
         alertSuccess('Finished')
         setDownloadOnly([])
         const new_filename = checker.videoFile.name.split('.').slice(0, -1).join() + '.srt'
-        const download_ele = document.getElementById('download')
-        checker.sp.setDownload(download_ele, new_filename, delay)
+        checker.sp.setDownload(new_filename, delay)
         const subSrcResult = checker.sp.setUrl()
         setSubSrc(subSrcResult)
         const videoSrcResult = await checker.setUrl()
@@ -183,6 +182,7 @@ const Form = (props) => {
                     {success}
                 </Alert>
             </Snackbar>
+            {process.env.API_SERVER}
         </Grid>
     )
 }
