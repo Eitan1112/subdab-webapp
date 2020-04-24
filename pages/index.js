@@ -7,7 +7,7 @@ class App extends React.Component{
   state = {
     running: false
   }
-
+  
   componentDidMount() {
     window.addEventListener('beforeunload', this.beforeunload.bind(this));
   }

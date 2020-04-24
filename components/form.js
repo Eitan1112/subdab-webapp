@@ -106,7 +106,7 @@ const Form = (props) => {
 
         setProgressOnly([]) // Show progress
 
-        const checker = new Checker(setProgress, setMessage, alertError)
+        const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError)
         setStartDisabled(true)
         props.setRunning(true)
 

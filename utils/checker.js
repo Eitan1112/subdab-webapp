@@ -9,6 +9,7 @@ class Checker {
      *
      * 
      * Attributes:
+     *      server (String): The API server.
      *      subsElement (Element): The subtitles file input element.
      *      videoElement (Element): The video file input element.
      *      worker (Worker): The ffmpeg worker.
@@ -19,11 +20,12 @@ class Checker {
      *      setError (function): Function to set error for the client.
      */
 
-    constructor(setProgress, setMessage, setError) {
+    constructor(server, setProgress, setMessage, setError) {
         /**
          * Constructor for Readers class.
          * 
          * Params:
+         *      server (String): The API server.
          *      setProgress (function): Function to set the progress.
          *      setMessage (function): Function to set message for the client.
          *      setError (function): Function to set error for the client.
@@ -36,6 +38,8 @@ class Checker {
         this.setProgress = setProgress
         this.setMessage = setMessage
         this.setError = setError
+        this.server = server
+        console.log(server)
     }
 
     async prepare() {
@@ -91,7 +95,7 @@ class Checker {
             data,
             extension: this.extension
         })
-        const check_sync_url = Constants.SERVER + Constants.CHECK_SYNC_ROUTE
+        const check_sync_url = this.server + Constants.CHECK_SYNC_ROUTE
         const request_content = {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
@@ -126,7 +130,7 @@ class Checker {
         const buffer = await this.trimVideo(start, end)
         const base64str = Helpers.arrayBufferToBase64(buffer)
         this.setProgress(Math.floor(progress + (step / 3)))
-        const check_delay_url = Constants.SERVER + Constants.CHECK_DELAY_ROUTE
+        const check_delay_url = this.SERVER + Constants.CHECK_DELAY_ROUTE
         const check_delay_body = JSON.stringify({
             base64str,
             timestamp: { start, end },
