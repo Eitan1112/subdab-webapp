@@ -182,7 +182,6 @@ const Form = (props) => {
                     {success}
                 </Alert>
             </Snackbar>
-            {process.env.API_SERVER}
         </Grid>
     )
 }
