@@ -1,6 +1,7 @@
 .button {
-    width:98% !important;
-    display:block !important;
-    margin: auto !important;
+    width:98%;
+    display:block;
+    margin: auto;
     font-size: 18px;
+    margin: 5px auto !important
 }
