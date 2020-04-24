@@ -7,19 +7,19 @@ const Progress = (props) => (
     <Hidden only={props.only}>
         <Grid container>
             <Grid container className={styles.statusContainer}>
-                <Grid item md={4}></Grid>
-                <Grid item md={4}>
+                <Grid item xs={0} lg={4}></Grid>
+                <Grid item xs={12} lg={4}>
                     <LinearProgress variant="determinate" value={props.progress} />
                 </Grid>
             </Grid>
             <Grid container>
-                <Grid item md={4}></Grid>
-                <Grid item md={2}>
+                <Grid item xs={0} lg={4}></Grid>
+                <Grid item xs={6} lg={2}>
                     <h3>
                         Progress: {props.progress}%
                     </h3>
                 </Grid>
-                <Grid item md={2} className={styles.message}>
+                <Grid item xs={6} lg={2} className={styles.message}>
                     <h3>
                         {props.message}
                     </h3>
