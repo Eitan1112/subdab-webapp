@@ -16,7 +16,8 @@ const Alert = (props) => {
 }
 
 const Form = (props) => {
-    const hiddenOnly = ['xs', 'sm', 'md', 'lg', 'xl']
+    // const hiddenOnly = ['xs', 'sm', 'md', 'lg', 'xl']
+    const hiddenOnly = []
 
     const [progressOnly, setProgressOnly] = useState(hiddenOnly)
     const [downloadOnly, setDownloadOnly] = useState(hiddenOnly)

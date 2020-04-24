@@ -1,4 +1,5 @@
 import formStyles from './form.module.css'
+import styles from './download.module.css'
 import Hidden from '@material-ui/core/Hidden'
 import Grid from '@material-ui/core/Grid'
 import MuiModal from '@material-ui/core/Modal';
@@ -17,21 +18,23 @@ const Download = (props) => {
         setOpen(false);
     };
 
+    const modalBody = (<div><ModalBody videoSrc={props.videoSrc} subSrc={props.subSrc}/></div>)
+
 
     return (
         <Hidden only={props.only}>
             <Grid container>
-                <Grid item md={4}></Grid>
-                <Grid item md={2}>
+                <Grid item xs={0} lg={4}></Grid>
+                <Grid item xs={6} lg={2}>
                     <a id="download">
-                        <button className={formStyles.formButton}>
+                        <button className={[formStyles.formButton, styles.button].join(' ')}>
                             Download Subtitles
                     </button>
                     </a>
                 </Grid>
-                <Grid item md={2}>
+                <Grid item xs={6} lg={2}>
                     <a>
-                        <button onClick={handleOpen} className={formStyles.formButton}>
+                        <button onClick={handleOpen} className={[formStyles.formButton, styles.button].join(' ')}>
                             Preview
                         </button>
                     </a>
@@ -41,7 +44,7 @@ const Download = (props) => {
                         aria-labelledby="simple-modal-title"
                         aria-describedby="simple-modal-description"
                     >
-                        <ModalBody videoSrc={props.videoSrc} subSrc={props.subSrc} />
+                    {modalBody}
                     </MuiModal>
                 </Grid>
             </Grid>

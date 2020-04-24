@@ -9,9 +9,7 @@
     padding         : 12px 30px;
     font-size       : 25px;
     border-radius   : 2px;
-    width           : 96%;
-    display         : block;
-    margin          : auto;
+    width           : 100%;
     transition      : background-color 0.2s;
 }
 

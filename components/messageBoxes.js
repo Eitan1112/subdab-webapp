@@ -41,8 +41,7 @@ export const TimeItTakes = () => (
 export const HowItWorksMobile = () => (
     <Hidden lgUp>
         <Grid container>
-            <Grid item xs={1}></Grid>
-            <Grid item xs={10} className={styles.messageBoxMobile}>
+            <Grid item xs={12} className={styles.messageBoxMobile}>
                 <Grid className={styles.messageBoxInnerGridMobile}>
                     <div>
                         <h3>
@@ -62,8 +61,7 @@ export const HowItWorksMobile = () => (
 export const TimeItTakesMobile = () => (
     <Hidden lgUp>
         <Grid container>
-        <Grid item xs={1}></Grid>
-            <Grid item xs={10} className={styles.messageBoxMobile}>
+            <Grid item xs={12} className={styles.messageBoxMobile}>
                 <Grid className={styles.messageBoxInnerGridMobile}>
                     <div>
                         <h3>
