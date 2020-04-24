@@ -39,7 +39,6 @@ class Checker {
         this.setMessage = setMessage
         this.setError = setError
         this.server = server
-        console.log(server)
     }
 
     async prepare() {
@@ -55,9 +54,7 @@ class Checker {
         const subtitles = await Helpers.readSubtitlesAsync(this.subsFile)
         this.sp = new SubtitlesParser(subtitles)
         this.setProgress(3)
-        const worker = createWorker({
-            logger: ({ message }) => console.log(message),
-        });
+        const worker = createWorker();
         this.setProgress(5)
         this.setMessage('Loading video editor...')
         await worker.load();
@@ -212,7 +209,6 @@ class Checker {
          */
 
         const { data } = await this.worker.read(this.filename)
-        console.log(`Type: video/${this.extension}`, data)
         const url = URL.createObjectURL(new Blob([data.buffer], { type: `video/${this.extension}` }));
         return url
     }

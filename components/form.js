@@ -16,8 +16,7 @@ const Alert = (props) => {
 }
 
 const Form = (props) => {
-    // const hiddenOnly = ['xs', 'sm', 'md', 'lg', 'xl']
-    const hiddenOnly = []
+    const hiddenOnly = ['xs', 'sm', 'md', 'lg', 'xl']
 
     const [progressOnly, setProgressOnly] = useState(hiddenOnly)
     const [downloadOnly, setDownloadOnly] = useState(hiddenOnly)
@@ -76,6 +75,7 @@ const Form = (props) => {
          * Returns:
          *      Object: validated: Is validated. Error: The error if not validated.
          */
+        
         const input = document.querySelector('input[type=file]')
         if (Array.from(input.files).length !== 2) {
             return { validated: false, error: 'Please upload both the subtitles and video files.' }
