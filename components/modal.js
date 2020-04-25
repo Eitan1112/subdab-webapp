@@ -26,7 +26,7 @@ const Modal = (props) => (
                     {props.videoSrc}
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <button className={styles.button}>
+                    <button className={styles.button} onClick={props.continueCheckDelay}>
                         Not Synced - Continue
                     </button>
                 </Grid>

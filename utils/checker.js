@@ -18,6 +18,7 @@ class Checker {
      *      setProgress (function): Function to set the progress.
      *      setMessage (function): Function to set message for the client.
      *      setError (function): Function to set error for the client.
+     *      delaysFound (Array of objects): Array containing delays found (used if user decided the subtitles are not synced)
      */
 
     constructor(server, setProgress, setMessage, setError) {
@@ -39,6 +40,7 @@ class Checker {
         this.setMessage = setMessage
         this.setError = setError
         this.server = server
+        this.delaysFound = []
     }
 
     async prepare() {
@@ -106,6 +108,14 @@ class Checker {
         return json_res.is_synced
     }
 
+    async continueCheckDelay() {
+        const lastDelayFound = this.delaysFound[this.delaysFound.length - 1]
+        const start = lastDelayFound.start + Constants.DEFAULT_SECTION_LENGTH
+        const end = lastDelayFound.end + Constants.DEFAULT_SECTION_LENGTH
+        const delay = await this.checkDelay(start, end)
+        return delay
+    }
+
     async checkDelay(start = 0, end = Constants.DEFAULT_SECTION_LENGTH) {
         /**
          * Checks the delay of the subtitles compared to the video.
@@ -118,7 +128,6 @@ class Checker {
          *      delay (float): The delay.
          */
 
-        let delay = undefined
         const iteration = start / Constants.DEFAULT_SECTION_LENGTH
 
         // Progres: First iteration: 50, Second: 70, Third: 80, Fourth: 85, Fifth: 87.5 etc.
@@ -148,6 +157,9 @@ class Checker {
 
         const json_res = await res.json()
         if (json_res.hasOwnProperty('delay')) {
+            this.delaysFound = this.delaysFound.concat({
+                delay: json_res.delay, start, end
+            })
             return json_res.delay
         } else {
             const new_start = start + Constants.DEFAULT_SECTION_LENGTH

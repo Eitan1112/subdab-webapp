@@ -30,6 +30,7 @@ const Form = (props) => {
     const [startDisabled, setStartDisabled] = useState(false)
     const [videoSrc, setVideoSrc] = useState('')
     const [subSrc, setSubSrc] = useState('')
+    const [checker, setChecker] = useState()
 
     const handleSuccessClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -154,7 +155,33 @@ const Form = (props) => {
         setSubSrc(subSrcResult)
         const videoSrcResult = await checker.setUrl()
         setVideoSrc(videoSrcResult)
+        setChecker(checker)
     };
+
+
+    const continueCheckDelay = async () => {
+        setProgress(56)      
+        setDownloadOnly(hiddenOnly)  
+        let delay
+        try {
+            delay = await checker.continueCheckDelay()
+        } catch (err) {
+            alertError(`Unexpected error while checking delay: ${err}`)
+            return
+        }
+        if (!delay) {
+            return alertError('Unable to find delay.')
+        }
+        setProgress(100)
+        setDownloadOnly([])
+        const new_filename = checker.videoFile.name.split('.').slice(0, -1).join() + '.srt'
+        checker.sp.setDownload(new_filename, delay)
+        const subSrcResult = checker.sp.setUrl()
+        setSubSrc(subSrcResult)
+        const videoSrcResult = await checker.setUrl()
+        setVideoSrc(videoSrcResult)
+        setChecker(checker)
+    }
 
     return (
         <Grid container className={styles.container}>
@@ -169,7 +196,7 @@ const Form = (props) => {
             </Grid>
             <Start sync={sync} handleChange={handleChange} disabled={startDisabled} />
             <Progress only={progressOnly} progress={progress} message={message} />
-            <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} />
+            <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} continueCheckDelay={continueCheckDelay} />
             <HowItWorksMobile />
 
             {/* Alerts */}

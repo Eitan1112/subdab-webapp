@@ -18,7 +18,7 @@ const Download = (props) => {
         setOpen(false);
     };
 
-    const modalBody = (<div><ModalBody videoSrc={props.videoSrc} subSrc={props.subSrc}/></div>)
+    const modalBody = (<div><ModalBody continueCheckDelay={props.continueCheckDelay} videoSrc={props.videoSrc} subSrc={props.subSrc}/></div>)
 
 
     return (
