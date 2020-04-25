@@ -24,10 +24,26 @@ class App extends React.Component {
     }
   }
 
+  injectGA () {
+    if (typeof window == 'undefined' || window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
+      return;
+    }
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      window.dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-110003673-3');
+  };
+
   render() {
     return (
       <div className={styles.App} id="app">
-        <Head>
+        <Head>          
+          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110003673-3"></script>
+          <script>{this.injectGA()}</script>
+
           <title>Syncit - Automatic Subtitles Syncer</title>
           <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
           <meta httpEquiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
