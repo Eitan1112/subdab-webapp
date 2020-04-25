@@ -3,8 +3,8 @@ import styles from './modal.module.css'
 
 const Modal = (props) => (
     <Grid container className={styles.container}>
-        <Grid item xs={4} />
-        <Grid item xs={4}>
+        <Grid item xs={false} lg={4} />
+        <Grid item xs={12} lg={4}>
             <Grid container className={styles.modalBody}>
                 <Grid item xs={12}>
                     <h1>View Sample</h1>
@@ -15,15 +15,17 @@ const Modal = (props) => (
                         </track>
                     </video>
                 </Grid>
-                <Grid item xs={6}>
-                    <a id="download-2">
+                <Grid item xs={12} lg={6}>
+                    <a href={document.getElementById('download').href}
+                       download={document.getElementById('download').download}
+                       className={styles.removeUnderline}>
                         <button className={styles.button}>
                             Download Subtitles
                             </button>
                     </a>
                     {props.videoSrc}
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} lg={6}>
                     <button className={styles.button}>
                         Not Synced - Continue
                     </button>

@@ -28,7 +28,7 @@
     font-size: 20px;
     padding: 10px 0px;
     transition: background-color 0.2s;
-    margin-top: 10px;
+    margin-top: 4px;
 }
 
 .button:hover{
@@ -38,6 +38,9 @@
 }
 
 .video {
-    max-height: 300px;
-    max-width: 400px;
+    max-width: 100%;
+}
+
+.removeUnderline {
+    text-decoration: none;
 }

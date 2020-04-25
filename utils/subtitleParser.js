@@ -32,15 +32,11 @@ class SubtitlesParser {
      *    filename (String): The video filename.
      *    delay (float): The delay.
      */
-
      
     const download_ele = document.getElementById('download')
-    const download_ele2 = document.getElementById('download-2')
     const new_subtitles = this.generate_new_subtitles(delay)
     download_ele.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(new_subtitles));
     download_ele.setAttribute('download', filename);
-    download_ele2.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(new_subtitles));
-    download_ele2.setAttribute('download', filename);
   }
 
 

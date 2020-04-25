@@ -1,18 +1,11 @@
 import { DropzoneArea } from 'material-ui-dropzone'
 import styles from './upload.module.css'
+import Dropzone from './dropzone'
 
 const Upload = () => (
-    <div>
-        <DropzoneArea
-            acceptedFiles={['video/*', '', 'plain/text']}
-            maxFileSize={10737418240}
-            showFileNames={true}
-            filesLimit={2}
-            dropzoneText={'Upload video and subtitles'}
-            id="files"
-        />
+<div className={styles.container}>
+        <Dropzone />
     </div>
 )
-
 
 export default Upload

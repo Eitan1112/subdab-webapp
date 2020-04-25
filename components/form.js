@@ -9,7 +9,7 @@ import { useState } from 'react'
 import Checker from '../utils/checker'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert';
-import SubtitlesParser from '../utils/subtitleParser';
+import Dropzone from './dropzone'
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -54,14 +54,15 @@ const Form = (props) => {
     const alertSuccess = (msg) => {
         setMessage('Finished')
         setSuccess(msg)
+        setErrorOpen(false)
         setSuccessOpen(true)
         setStartDisabled(false)
-        setProgress(100)
         props.setRunning(false)
     }
 
     const alertError = (msg) => {
         setError(msg)
+        setSuccessOpen(false)
         setErrorOpen(true)
         setStartDisabled(false)
         props.setRunning(false)
@@ -144,6 +145,7 @@ const Form = (props) => {
             return alertError('Unable to find delay.')
         }
 
+        setProgress(100)
         alertSuccess('Finished')
         setDownloadOnly([])
         const new_filename = checker.videoFile.name.split('.').slice(0, -1).join() + '.srt'
@@ -161,7 +163,7 @@ const Form = (props) => {
                 <Grid item md={false} lg={false} xl={1}></Grid>
                 <HowItWorks />
                 <Grid item lg={4} xs={12}>
-                    <Upload></Upload>
+                    <Dropzone alertError={alertError} alertSuccess={alertSuccess} />
                 </Grid>
                 <TimeItTakes />
             </Grid>
