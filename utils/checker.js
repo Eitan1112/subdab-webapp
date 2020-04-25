@@ -32,8 +32,8 @@ class Checker {
          *      setError (function): Function to set error for the client.
          */
 
-        this.subsFile = (Array.from(document.querySelector('input[type="file"]').files).filter((file) => file.type.split('/')[0] !== 'video'))[0];
-        this.videoFile = (Array.from(document.querySelector('input[type="file"]').files).filter((file) => file.type.split('/')[0] === 'video'))[0];
+        this.subsFile = document.getElementById('subtitles-file').files[0]
+        this.videoFile = document.getElementById('video-file').files[0]
         this.sp = undefined
         this.filename = undefined
         this.setProgress = setProgress
@@ -94,7 +94,6 @@ class Checker {
             data,
             extension: this.extension
         })
-        console.log('Server', this.server)
         const check_sync_url = this.server + Constants.CHECK_SYNC_ROUTE
         const request_content = {
             method: 'POST',

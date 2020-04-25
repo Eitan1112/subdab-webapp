@@ -70,6 +70,7 @@ const Form = (props) => {
         setProgress(0)
         setMessage('Waiting to start...')
     }
+    
     const validate = () => {
         /**
          * Validates that the user input files are valid. 
@@ -78,21 +79,13 @@ const Form = (props) => {
          *      Object: validated: Is validated. Error: The error if not validated.
          */
         
-        const input = document.querySelector('input[type=file]')
-        if (Array.from(input.files).length !== 2) {
-            return { validated: false, error: 'Please upload both the subtitles and video files.' }
-        }
-        let subsElement
-        let videoElement
-        try {
-            subsElement = (Array.from(document.querySelector('input[type="file"]').files).filter((file) => file.type.split('/')[0] !== 'video'))[0];
-            videoElement = (Array.from(document.querySelector('input[type="file"]').files).filter((file) => file.type.split('/')[0] === 'video'))[0];
-        } catch {
-            return { validated: false, error: 'Please upload one video file and one subtitles file.' }
-        }
-        if (subsElement === undefined || subsElement.type !== '') {
-            return { validated: false, error: 'Please upload a valid subtitles file.' }
-
+        const videoFile = document.getElementById('video-file').files
+        const subtitlesFile = document.getElementById('subtitles-file').files
+        if(Array.from(videoFile).length !== 1 || Array.from(subtitlesFile).length !== 1) {
+            return {
+                validation: false,
+                error: 'Please upload both the subtitles and video files.'
+            }
         }
         return { validated: true }
     }
@@ -189,8 +182,22 @@ const Form = (props) => {
             <Grid container>
                 <Grid item md={false} lg={false} xl={1}></Grid>
                 <HowItWorks />
-                <Grid item lg={4} xs={12}>
-                    <Dropzone alertError={alertError} alertSuccess={alertSuccess} />
+                <Grid item lg={2} xs={12}>
+                    <Dropzone 
+                        alertError={alertError} 
+                        alertSuccess={alertSuccess} 
+                        accept={['video/*']} 
+                        id="video-file"
+                        text="Upload Video"  />
+                </Grid>
+                <Grid item lg={2} xs={12}>
+                    <Dropzone 
+                        alertError={alertError} 
+                        alertSuccess={alertSuccess}
+                        accept={['', 'plain/text']}
+                        extension={'srt'}
+                        id="subtitles-file"
+                        text="Upload Subtitles" />
                 </Grid>
                 <TimeItTakes />
             </Grid>

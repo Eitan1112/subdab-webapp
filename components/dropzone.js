@@ -3,41 +3,46 @@ import styles from './dropzone.module.css'
 
 
 const Dropzone = (props) => {
-    const [files, setFiles] = useState([])
+    /**
+     * Dropzone component for Drag and Drop file input.
+     * 
+     * Props:
+     *      alertError (function): Function for alerting an error.
+     *      alertSuccess (function): Function for alerting success.
+     *      accept (Array): Array of strings containing accepted MIME types.
+     *      id (string): ID for the file input.
+     *      text (string): Default text
+     *      extension (string) (OPTIONAL): Extension to enforce on files.
+     */
 
+    const [file, setFile] = useState()
     const handleChange = () => {
-        const currentFiles = document.getElementById('file-upload').files
-        if (Array.from(currentFiles).length !== 2) {
-            props.alertError('Please select 2 files.')
-            document.getElementById('file-upload').files = null
-            return
-        }
-        console.log(currentFiles[0].type, currentFiles[1].type)
-        if (!((currentFiles[0].type.split('/')[0] === 'video' && currentFiles[1].type === "") ||
-            (currentFiles[1].type.split('/')[0] === 'video' && currentFiles[0].type === ""))) {
-            props.alertError('Please upload one subtitles file and one video file.')
-            document.getElementById('file-upload').files = null
-            return
+        const files = document.getElementById(props.id).files
+        const fileCount = Array.from(files).length
+        if(fileCount === 0) {
+            return setFile()
+        } else if(fileCount === 1) {
+            if(props.extension && files[0].name.slice(-3) !== props.extension) {
+                document.getElementById(props.id).files = null
+                return props.alertError(`Only file with '${props.extension}' extension are allowed.`)
+            }
+            setFile({
+                name: files[0].name,
+                type: files[0].type})
         }
         props.alertSuccess('Files loaded.')
-        setFiles(Array.from(currentFiles).map((file) => ({
-            'name': file.name,
-            'type': file.type
-        })))
     }
 
     return (
         <div className={styles.container}>
-            <input className={styles.input} type="file" id="file-upload" multiple onChange={handleChange} accept={['video/*', '', 'plain/text']} />
+            <input className={styles.input} type="file" id={props.id} onChange={handleChange} accept={props.accept} />
             <div className={styles.text}>{
-                files.length === 0 ? 'Drag your files here or click in this area.'
+                file === undefined ? 
+                    props.text
                     :
-                    files.map((file, index) => (
-                        <div key={-index} className={styles.singleFile}>
-                            {file.name}
-                        </div>
-                    ))
-            }</div>
+                    file.name
+                    }
+            </div>
         </div>
     )
 }
