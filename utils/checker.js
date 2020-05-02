@@ -32,8 +32,6 @@ class Checker {
          *      setError (function): Function to set error for the client.
          */
 
-        this.subsFile = document.getElementById('subtitles-file').files[0]
-        this.videoFile = document.getElementById('video-file').files[0]
         this.sp = undefined
         this.filename = undefined
         this.setProgress = setProgress
@@ -53,6 +51,8 @@ class Checker {
          * 
          */
 
+        this.subsFile = document.getElementById('subtitles-file').files[0]
+        this.videoFile = document.getElementById('video-file').files[0]
         const subtitles = await Helpers.readSubtitlesAsync(this.subsFile)
         this.sp = new SubtitlesParser(subtitles)
         this.setProgress(5)
@@ -103,6 +103,8 @@ class Checker {
 
         // Progres: First iteration: 25, Second: 55, Third: 70, Fourth: 77, Fifth: 81 etc.
         let progress = 25 + Math.floor([...Array(iteration).keys()].map((num) => 30 / Math.pow(2, num)).reduce((a, b) => a + b, 0))
+        this.setProgress(Math.floor(progress))
+        this.setMessage('Checking delay...')
         const step = (30 / Math.pow(2, iteration))
 
         const buffer = await this.trimVideo(start, end)

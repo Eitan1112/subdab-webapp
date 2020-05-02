@@ -26,20 +26,19 @@ const Form = (props) => {
     const [successOpen, setSuccessOpen] = useState(false)
     const [progress, setProgress] = useState(0)
     const [message, setMessage] = useState('Waiting to start')
-    const [checked, setChecked] = useState(true);
     const [inputDisabled, setInputDisabled] = useState(false)
     const [videoSrc, setVideoSrc] = useState('')
     const [subSrc, setSubSrc] = useState('')
-    const [checker, setChecker] = useState()
-
+    const [globalChecker, setGlobalChecker] = useState()
+    
     const handleSuccessClose = (event, reason) => {
         setSuccessOpen(false);
     };
-
+    
     const handleErrorClose = (event, reason) => {
         setErrorOpen(false);
     };
-
+    
     const alertSuccess = (msg) => {
         setMessage('Finished')
         setSuccess(msg)
@@ -47,7 +46,7 @@ const Form = (props) => {
         setSuccessOpen(true)
         props.setRunning(false)
     }
-
+    
     const alertError = (msg) => {
         setError(msg)
         setSuccessOpen(false)
@@ -57,7 +56,8 @@ const Form = (props) => {
         setProgress(0)
         setMessage('Waiting to start...')
     }
-    
+
+
     const validate = () => {
         /**
          * Validates that the user input files are valid. 
@@ -65,10 +65,10 @@ const Form = (props) => {
          * Returns:
          *      Object: validated: Is validated. Error: The error if not validated.
          */
-        
+
         const videoFile = document.getElementById('video-file').files
         const subtitlesFile = document.getElementById('subtitles-file').files
-        if(Array.from(videoFile).length !== 1 || Array.from(subtitlesFile).length !== 1) {
+        if (Array.from(videoFile).length !== 1 || Array.from(subtitlesFile).length !== 1) {
             return {
                 validation: false,
                 error: 'Please upload both the subtitles and video files.'
@@ -77,7 +77,7 @@ const Form = (props) => {
         return { validated: true }
     }
 
-    const sync = async () => {
+    const main = async () => {
         /**
          * Main entry function for syncing the subtitles.
          */
@@ -86,23 +86,39 @@ const Form = (props) => {
         if (!validation.validated) {
             return alertError(validation.error)
         }
-
+        
+        const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError) 
         setProgressOnly([]) // Show progress
-
-        const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError)
         setInputDisabled(true)
         props.setRunning(true)
-
+        
         try {
             await checker.prepare()
         } catch (err) {
-            alertError(`Unexpect error: ${err}`)
+            alertError(`Unexpected error while preparing: ${err}`)
             return
         }
+        
+        checkDelay(checker, false)
+    };
 
+    const checkDelay = async (checker = globalChecker, isContinueCheckDelay = true) => {
+        /**
+         * Checks the delay and reacts accordinly on the UI.
+         * 
+         * Params:
+         *      isContinueCheckDelay (Boolean): Whether this is the first run, or any run after that. Defaults to true, on first run is set to false.
+         *      checker (Checker): The checker object. If not specified, use the global checker object.
+         */
+
+        setDownloadOnly(hiddenOnly)
         let delay
         try {
-            delay = await checker.checkDelay()
+            if(isContinueCheckDelay) {
+                delay = await checker.continueCheckDelay()
+            } else {
+                delay = await checker.checkDelay()
+            }
         } catch (err) {
             alertError(`Unexpected error while checking delay: ${err}`)
             return
@@ -121,33 +137,7 @@ const Form = (props) => {
         setSubSrc(subSrcResult)
         const videoSrcResult = await checker.setUrl()
         setVideoSrc(videoSrcResult)
-        setChecker(checker)
-    };
-
-
-    const continueCheckDelay = async () => {
-        setProgress(56)      
-        setDownloadOnly(hiddenOnly)  
-        let delay
-        try {
-            delay = await checker.continueCheckDelay()
-        } catch (err) {
-            alertError(`Unexpected error while checking delay: ${err}`)
-            return
-        }
-        if (!delay) {
-            return alertError('Unable to find delay.')
-        }
-        setProgress(100)
-        setDownloadOnly([])
-        const new_filename = checker.videoFile.name.split('.').slice(0, -1).join() + '.srt'
-        checker.sp.setDownload(new_filename, delay)
-        const subSrcResult = checker.sp.setUrl()
-        setSubSrc(subSrcResult)
-        const videoSrcResult = await checker.setUrl()
-        setVideoSrc(videoSrcResult)
-        setChecker(checker)
-        setInputDisabled(false)
+        setGlobalChecker(checker)
     }
 
     return (
@@ -157,18 +147,18 @@ const Form = (props) => {
                 <Grid item md={false} lg={false} xl={1}></Grid>
                 <HowItWorks />
                 <Grid item lg={2} xs={12}>
-                    <Dropzone 
+                    <Dropzone
                         disabled={inputDisabled}
-                        alertError={alertError} 
-                        alertSuccess={alertSuccess} 
-                        accept={['video/*']} 
+                        alertError={alertError}
+                        alertSuccess={alertSuccess}
+                        accept={['video/*']}
                         id="video-file"
-                        text="Load Video"  />
+                        text="Load Video" />
                 </Grid>
                 <Grid item lg={2} xs={12}>
-                    <Dropzone 
+                    <Dropzone
                         disabled={inputDisabled}
-                        alertError={alertError} 
+                        alertError={alertError}
                         alertSuccess={alertSuccess}
                         accept={['', 'plain/text']}
                         extension={'srt'}
@@ -177,9 +167,9 @@ const Form = (props) => {
                 </Grid>
                 <TimeItTakes />
             </Grid>
-            <Start sync={sync} disabled={inputDisabled} />
+            <Start sync={main} disabled={inputDisabled} />
             <Progress only={progressOnly} progress={progress} message={message} />
-            <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} continueCheckDelay={continueCheckDelay} />
+            <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} continueCheckDelay={checkDelay} />
             <HowItWorksMobile />
 
             {/* Alerts */}

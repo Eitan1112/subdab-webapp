@@ -2,7 +2,13 @@ import Grid from '@material-ui/core/Grid'
 import styles from './modal.module.css'
 import * as Constants from '../constants'
 
-const Modal = (props) => (
+const Modal = (props) => {
+
+    const handleContinueSync = async () => {
+        await props.continueCheckDelay()
+    }
+
+    return (
     <Grid container className={styles.container}>
         <Grid item xs={false} lg={4} />
         <Grid item xs={12} lg={4}>
@@ -28,13 +34,14 @@ const Modal = (props) => (
                     {props.videoSrc}
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <button className={styles.button} onClick={props.continueCheckDelay}>
+                    <button className={styles.button} onClick={handleContinueSync}>
                         Not Synced - Continue
                     </button>
                 </Grid>
             </Grid>
         </Grid>
     </Grid>
-)
+    )
+}
 
 export default Modal
