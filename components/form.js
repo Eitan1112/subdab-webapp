@@ -33,18 +33,10 @@ const Form = (props) => {
     const [checker, setChecker] = useState()
 
     const handleSuccessClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSuccessOpen(false)
+        setSuccessOpen(false);
     };
 
     const handleErrorClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
         setErrorOpen(false);
     };
 
@@ -188,7 +180,7 @@ const Form = (props) => {
                         alertSuccess={alertSuccess} 
                         accept={['video/*']} 
                         id="video-file"
-                        text="Upload Video"  />
+                        text="Load Video"  />
                 </Grid>
                 <Grid item lg={2} xs={12}>
                     <Dropzone 
@@ -197,7 +189,7 @@ const Form = (props) => {
                         accept={['', 'plain/text']}
                         extension={'srt'}
                         id="subtitles-file"
-                        text="Upload Subtitles" />
+                        text="Load Subtitles" />
                 </Grid>
                 <TimeItTakes />
             </Grid>
@@ -208,12 +200,12 @@ const Form = (props) => {
 
             {/* Alerts */}
             <TimeItTakesMobile />
-            <Snackbar open={errorOpen} className={styles.alert} autoHideDuration={9000} onClose={handleErrorClose}>
+            <Snackbar open={errorOpen} autoHideDuration={7000} onClose={handleErrorClose}>
                 <Alert severity="error" onClose={handleErrorClose}>
                     {error}
                 </Alert>
             </Snackbar>
-            <Snackbar open={successOpen} className={styles.alert} autoHideDuration={6000} onClose={handleSuccessClose}>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
                 <Alert severity="success" onClose={handleSuccessClose}>
                     {success}
                 </Alert>
