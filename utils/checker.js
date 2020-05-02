@@ -10,8 +10,8 @@ class Checker {
      * 
      * Attributes:
      *      server (String): The API server.
-     *      subsElement (Element): The subtitles file input element.
-     *      videoElement (Element): The video file input element.
+     *      subsFile (Element): The subtitles file input element.
+     *      videoFile (Element): The video file input element.
      *      worker (Worker): The ffmpeg worker.
      *      sp (SubtitleParser): The subtitle parser object. (Only loads after prepare is called).
      *      filename (String): The video filename. (Only loads after prepare is called).
@@ -193,7 +193,7 @@ class Checker {
         return data;
     }
 
-    async trimVideo(start, end) {
+    async trimVideo(start, end, extension = undefined) {
         /**
          * Trims a video and returns the buffer.
          *
@@ -205,7 +205,13 @@ class Checker {
          *       string: The buffer of the file.
          */
 
-        const trimed_filename = "trimed." + this.extension; // trimed.extension
+        let trimed_filename = 'trimed.'
+        if (extension === undefined) {
+            trimed_filename += this.extension;
+        }
+        else {
+            trimed_filename += extension
+        }
         await this.worker.trim(this.filename, trimed_filename, start, end, "-c copy -y");
         const { data } = await this.worker.read(trimed_filename);
         await this.worker.remove(trimed_filename);
@@ -220,8 +226,8 @@ class Checker {
          *      String: The url
          */
 
-        const { data } = await this.worker.read(this.filename)
-        const url = URL.createObjectURL(new Blob([data.buffer], { type: `video/${this.extension}` }));
+        const buffer = await this.trimVideo(Constants.PREVIEW_START_TIME, Constants.PREVIEW_END_TIME, Constants.PREVIEW_FILE_EXTENSION)
+        const url = URL.createObjectURL(new Blob([buffer], { type: Constants.PREVIEW_FILE_MIMETYPE }));
         return url
     }
 }

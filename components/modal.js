@@ -1,5 +1,6 @@
 import Grid from '@material-ui/core/Grid'
 import styles from './modal.module.css'
+import * as Constants from '../constants'
 
 const Modal = (props) => (
     <Grid container className={styles.container}>
@@ -10,7 +11,8 @@ const Modal = (props) => (
                     <h1>View Sample</h1>
                 </Grid>
                 <Grid item xs={12}>
-                    <video src={props.videoSrc} className={styles.video} controls>
+                    <video type={Constants.PREVIEW_FILE_MIMETYPE} className={styles.video} controls>
+                        <source src={props.videoSrc}></source>
                         <track default src={props.subSrc} kind="subtitles" srcLang="en" label="English">
                         </track>
                     </video>

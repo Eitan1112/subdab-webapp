@@ -119,17 +119,17 @@ const Form = (props) => {
             }
         }
 
+        let delay = -7.5
         setMessage('Subtitles are not synced with video.')
-        let delay
-        try {
-            delay = await checker.checkDelay()
-        } catch (err) {
-            alertError(`Unexpected error while checking delay: ${err}`)
-            return
-        }
-        if (!delay) {
-            return alertError('Unable to find delay.')
-        }
+        // try {
+        //     delay = await checker.checkDelay()
+        // } catch (err) {
+        //     alertError(`Unexpected error while checking delay: ${err}`)
+        //     return
+        // }
+        // if (!delay) {
+        //     return alertError('Unable to find delay.')
+        // }
 
         setProgress(100)
         alertSuccess('Finished')
