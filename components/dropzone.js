@@ -35,7 +35,7 @@ const Dropzone = (props) => {
 
     return (
         <div className={styles.container}>
-            <input className={styles.input} type="file" id={props.id} onChange={handleChange} accept={props.accept} />
+            <input disabled={props.disabled} className={styles.input} type="file" id={props.id} onChange={handleChange} accept={props.accept} />
             <div className={styles.text}>{
                 file === undefined ? 
                     props.text

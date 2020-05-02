@@ -27,7 +27,7 @@ const Form = (props) => {
     const [progress, setProgress] = useState(0)
     const [message, setMessage] = useState('Waiting to start')
     const [checked, setChecked] = useState(true);
-    const [startDisabled, setStartDisabled] = useState(false)
+    const [inputDisabled, setInputDisabled] = useState(false)
     const [videoSrc, setVideoSrc] = useState('')
     const [subSrc, setSubSrc] = useState('')
     const [checker, setChecker] = useState()
@@ -49,15 +49,14 @@ const Form = (props) => {
         setSuccess(msg)
         setErrorOpen(false)
         setSuccessOpen(true)
-        setStartDisabled(false)
         props.setRunning(false)
     }
 
     const alertError = (msg) => {
         setError(msg)
         setSuccessOpen(false)
+        setInputDisabled(false)
         setErrorOpen(true)
-        setStartDisabled(false)
         props.setRunning(false)
         setProgress(0)
         setMessage('Waiting to start...')
@@ -95,7 +94,7 @@ const Form = (props) => {
         setProgressOnly([]) // Show progress
 
         const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError)
-        setStartDisabled(true)
+        setInputDisabled(true)
         props.setRunning(true)
 
         try {
@@ -119,19 +118,20 @@ const Form = (props) => {
             }
         }
 
-        let delay = -7.5
+        let delay
         setMessage('Subtitles are not synced with video.')
-        // try {
-        //     delay = await checker.checkDelay()
-        // } catch (err) {
-        //     alertError(`Unexpected error while checking delay: ${err}`)
-        //     return
-        // }
-        // if (!delay) {
-        //     return alertError('Unable to find delay.')
-        // }
+        try {
+            delay = await checker.checkDelay()
+        } catch (err) {
+            alertError(`Unexpected error while checking delay: ${err}`)
+            return
+        }
+        if (!delay) {
+            return alertError('Unable to find delay.')
+        }
 
         setProgress(100)
+        setInputDisabled(false)
         alertSuccess('Finished')
         setDownloadOnly([])
         const new_filename = checker.videoFile.name.split('.').slice(0, -1).join() + '.srt'
@@ -166,6 +166,7 @@ const Form = (props) => {
         const videoSrcResult = await checker.setUrl()
         setVideoSrc(videoSrcResult)
         setChecker(checker)
+        setInputDisabled(false)
     }
 
     return (
@@ -176,6 +177,7 @@ const Form = (props) => {
                 <HowItWorks />
                 <Grid item lg={2} xs={12}>
                     <Dropzone 
+                        disabled={inputDisabled}
                         alertError={alertError} 
                         alertSuccess={alertSuccess} 
                         accept={['video/*']} 
@@ -184,6 +186,7 @@ const Form = (props) => {
                 </Grid>
                 <Grid item lg={2} xs={12}>
                     <Dropzone 
+                        disabled={inputDisabled}
                         alertError={alertError} 
                         alertSuccess={alertSuccess}
                         accept={['', 'plain/text']}
@@ -193,7 +196,7 @@ const Form = (props) => {
                 </Grid>
                 <TimeItTakes />
             </Grid>
-            <Start sync={sync} handleChange={handleChange} disabled={startDisabled} />
+            <Start sync={sync} handleChange={handleChange} disabled={inputDisabled} />
             <Progress only={progressOnly} progress={progress} message={message} />
             <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} continueCheckDelay={continueCheckDelay} />
             <HowItWorksMobile />
