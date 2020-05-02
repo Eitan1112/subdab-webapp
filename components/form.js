@@ -40,10 +40,6 @@ const Form = (props) => {
         setErrorOpen(false);
     };
 
-    const handleChange = (event) => {
-        setChecked(event.target.checked);
-    };
-
     const alertSuccess = (msg) => {
         setMessage('Finished')
         setSuccess(msg)
@@ -104,22 +100,7 @@ const Form = (props) => {
             return
         }
 
-        if (checked) { // If to check sync first
-            let is_synced
-            try {
-                is_synced = await checker.checkSync()
-            } catch (err) {
-                alertError(`Unexpected error while checking sync: ${err}`)
-                return
-            }
-            if (is_synced) {
-                setProgress(100)
-                return alertSuccess('The subtitles and video are already synced!')
-            }
-        }
-
         let delay
-        setMessage('Subtitles are not synced with video.')
         try {
             delay = await checker.checkDelay()
         } catch (err) {
@@ -196,7 +177,7 @@ const Form = (props) => {
                 </Grid>
                 <TimeItTakes />
             </Grid>
-            <Start sync={sync} handleChange={handleChange} disabled={inputDisabled} />
+            <Start sync={sync} disabled={inputDisabled} />
             <Progress only={progressOnly} progress={progress} message={message} />
             <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} continueCheckDelay={continueCheckDelay} />
             <HowItWorksMobile />

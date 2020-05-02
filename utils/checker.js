@@ -55,17 +55,17 @@ class Checker {
 
         const subtitles = await Helpers.readSubtitlesAsync(this.subsFile)
         this.sp = new SubtitlesParser(subtitles)
-        this.setProgress(3)
-        const worker = createWorker();
         this.setProgress(5)
+        const worker = createWorker();
+        this.setProgress(8)
         this.setMessage('Loading video editor...')
         await worker.load();
-        this.setProgress(15)
+        this.setProgress(20)
         this.extension = this.videoFile.name.split('.').slice(-1)[0]
         this.filename = `video.${this.extension}`
         this.setMessage('Writing file for editing...')
         await worker.write(this.filename, this.videoFile);
-        this.setProgress(18)
+        this.setProgress(25)
         this.worker = worker
     }
 
@@ -77,34 +77,6 @@ class Checker {
         const new_filename = this.filename.split('.')[0] + '.srt'
         this.sp.set_download(element, new_filename, delay)
 
-    }
-
-    async checkSync() {
-        /**
-         * Checks whether the subtitles and video file are synced by sending buffers and subtitles to the
-         * server for comparison.
-         * 
-         * Returns:
-         *      json_res (JSON): The response to the check_sync request in JSON format.
-         */
-
-        const valid_subtitles_timestamps = this.sp.get_valid_subtitles_timestamps()
-        const data = await this.getBuffersAndTimestamps(valid_subtitles_timestamps)
-        const json_data = JSON.stringify({
-            data,
-            extension: this.extension
-        })
-        const check_sync_url = this.server + Constants.CHECK_SYNC_ROUTE
-        const request_content = {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: json_data
-        }
-        this.setMessage('Checking if synced...')
-        const res = await fetch(check_sync_url, request_content)
-        this.setProgress(50)
-        const json_res = await res.json()
-        return json_res.is_synced
     }
 
     async continueCheckDelay() {
@@ -129,9 +101,9 @@ class Checker {
 
         const iteration = start / Constants.DEFAULT_SECTION_LENGTH
 
-        // Progres: First iteration: 50, Second: 70, Third: 80, Fourth: 85, Fifth: 87.5 etc.
-        let progress = 50 + Math.floor([...Array(iteration).keys()].map((num) => 20 / Math.pow(2, num)).reduce((a, b) => a + b, 0))
-        const step = (20 / Math.pow(2, iteration))
+        // Progres: First iteration: 25, Second: 55, Third: 70, Fourth: 77, Fifth: 81 etc.
+        let progress = 25 + Math.floor([...Array(iteration).keys()].map((num) => 30 / Math.pow(2, num)).reduce((a, b) => a + b, 0))
+        const step = (30 / Math.pow(2, iteration))
 
         const buffer = await this.trimVideo(start, end)
         const base64str = Helpers.arrayBufferToBase64(buffer)
@@ -166,31 +138,6 @@ class Checker {
             this.setProgress(Math.floor(progress + step))
             return this.checkDelay(new_start, new_end)
         }
-    }
-
-
-    async getBuffersAndTimestamps(subtitles_timestamps) {
-        /**
-         * Gets the buffers of the timestamps and formats the return to fit the API.
-         *
-         * Params:
-         *    subtitles_timestamps (Array of Arrays): [[subtitles, start, end], [subtitles, start, end]...]
-         *
-         * Returns:
-         *    Array of Arrays: [[buffer, subtitles], [buffer, subtitles]...]
-         */
-
-        let data = [];
-
-        this.setMessage('Trimming video...')
-        let i = 1
-        for (const [subtitles, start, end] of subtitles_timestamps) {
-            const buffer = await this.trimVideo(start, end);
-            data.push([Helpers.arrayBufferToBase64(buffer), subtitles]);
-            this.setProgress(17 + i)
-            i++
-        }
-        return data;
     }
 
     async trimVideo(start, end, extension = undefined) {
