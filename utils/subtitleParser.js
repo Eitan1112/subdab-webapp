@@ -220,7 +220,7 @@ class SubtitlesParser {
     const minutes = String((Math.floor(seconds / 60))).padStart(2, '0')
     seconds = seconds % 60
 
-    const miliseconds = String((Math.floor(seconds % 1 * 1000)))
+    const miliseconds = String((Math.floor(seconds % 1 * 1000))).padStart(3, '0')
     seconds = String(Math.floor(seconds)).padStart(2, '0')
 
     const time = `${hours}:${minutes}:${seconds},${miliseconds}`
