@@ -21,24 +21,3 @@ export const readSubtitlesAsync = (file) => {
         reader.readAsText(file);
     });
 }
-
-export const arrayBufferToBase64 = (buffer) => {
-    /**
-     * Converts ArrayBuffer object to base64 string.
-     *
-     * Params:
-     *    buffer (ArrayBuffer): The buffer to convert.
-     *
-     * Returns:
-     *    string: base64 string of the buffer.
-     */
-
-    let binary = "";
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
-}
-

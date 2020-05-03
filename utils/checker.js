@@ -108,18 +108,17 @@ class Checker {
         const step = (30 / Math.pow(2, iteration))
 
         const buffer = await this.trimVideo(start, end)
-        const base64str = Helpers.arrayBufferToBase64(buffer)
         this.setProgress(Math.floor(progress + (step / 3)))
         const check_delay_url = this.server + Constants.CHECK_DELAY_ROUTE
-        const check_delay_body = JSON.stringify({
-            base64str,
-            timestamp: { start, end },
-            subtitles: this.sp.subtitles,
-            extension: this.extension
-        })
+        const check_delay_body = new FormData()
+        check_delay_body.append('file', new Blob([buffer], { type: this.videoFile.type}))
+        check_delay_body.append('start', start)
+        check_delay_body.append('end', end)
+        check_delay_body.append('subtitles', this.sp.subtitles)
+        check_delay_body.append('extension', this.extension)
+
         const request_content = {
             method: 'POST',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: check_delay_body
         }
         this.setMessage('Checking delay...')
