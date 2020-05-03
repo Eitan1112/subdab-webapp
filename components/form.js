@@ -1,6 +1,5 @@
 import styles from './form.module.css'
 import Grid from '@material-ui/core/Grid';
-import Upload from './upload'
 import { HowItWorks, TimeItTakes, HowItWorksMobile, TimeItTakesMobile } from './messageBoxes'
 import Start from './start'
 import Progress from './progress'
@@ -30,15 +29,15 @@ const Form = (props) => {
     const [videoSrc, setVideoSrc] = useState('')
     const [subSrc, setSubSrc] = useState('')
     const [globalChecker, setGlobalChecker] = useState()
-    
+
     const handleSuccessClose = (event, reason) => {
         setSuccessOpen(false);
     };
-    
+
     const handleErrorClose = (event, reason) => {
         setErrorOpen(false);
     };
-    
+
     const alertSuccess = (msg) => {
         setMessage('Finished')
         setSuccess(msg)
@@ -46,7 +45,7 @@ const Form = (props) => {
         setSuccessOpen(true)
         props.setRunning(false)
     }
-    
+
     const alertError = (msg) => {
         setError(msg)
         setSuccessOpen(false)
@@ -86,20 +85,22 @@ const Form = (props) => {
         if (!validation.validated) {
             return alertError(validation.error)
         }
-        
-        const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError) 
+        const t0 = performance.now()
+        const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError)
         setProgressOnly([]) // Show progress
         setInputDisabled(true)
         props.setRunning(true)
-        
+
         try {
             await checker.prepare()
         } catch (err) {
             alertError(`Unexpected error while preparing: ${err}`)
             return
         }
-        
-        checkDelay(checker, false)
+
+        await checkDelay(checker, false)
+        const t1 = performance.now()
+        console.log(`Finished in ${t1 - t0}`)
     };
 
     const checkDelay = async (checker = globalChecker, isContinueCheckDelay = true) => {
@@ -114,7 +115,7 @@ const Form = (props) => {
         setDownloadOnly(hiddenOnly)
         let delay
         try {
-            if(isContinueCheckDelay) {
+            if (isContinueCheckDelay) {
                 delay = await checker.continueCheckDelay()
             } else {
                 delay = await checker.checkDelay()

@@ -1,3 +1,5 @@
+import { addDelay } from './helpers'
+
 class SubtitlesParser {
   /**
    * Class for parsing the subtitles.
