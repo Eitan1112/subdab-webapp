@@ -1,4 +1,5 @@
 import * as Constants from "../constants";
+import {clean_text} from './helpers'
 
 class SubtitlesParser {
   /**
@@ -125,32 +126,6 @@ class SubtitlesParser {
     return subtitles_timestamps;
   }
 
-  clean_text(text) {
-    /**
-     * Cleans a string for better comparison.
-     *
-     * Params:
-     *      text (str): The text to clean.
-     *
-     * Returns:
-     *      str: The cleaned text.
-     */
-
-    text = text.replace("\n", " ");
-
-    // Remove HTML tags, text in curly, regular or square brackets and text in *
-    text = text.replace(/((?:<|\[|\(|\*|\{).+?(?:>|\)|}|]|\*))/gi, "");
-
-    text = text.toLowerCase();
-
-    const punctuations_regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
-    text = text.replace(punctuations_regex, "");
-    text = text.replace("♪", "").replace("â™ª", "");
-    text = text.replace(/ +/gi, " "); // Replace multiple whitespaces in one
-    text = text.trim();
-    return text;
-  }
-
   get_subtitles(index) {
     /**
      * Get subtitles based on the index.
@@ -166,7 +141,7 @@ class SubtitlesParser {
     const start = this.convert_subs_time(match[2]);
     const end = this.convert_subs_time(match[3]);
     let subtitles = match[4];
-    subtitles = this.clean_text(subtitles);
+    subtitles = clean_text(subtitles);
     return [subtitles, start, end];
   }
 
