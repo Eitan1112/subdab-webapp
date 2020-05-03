@@ -1,4 +1,4 @@
-import { cleanText, readSubtitlesAsync, convertSubsTime, convertSecondsTime } from '../utils/helpers'
+import { cleanText, readSubtitlesAsync, convertSubsTime, convertSecondsTime, addDelay } from '../utils/helpers'
 
 test('Test for clean test', () => {
     const texts_to_clean = [
@@ -78,5 +78,34 @@ test('Test convertSecondsTime', () => {
     secondsTimes.forEach((time, i) => {
         const timeInSubtitles = convertSecondsTime(time)
         expect(timeInSubtitles).toBe(subsTimes[i])
+    })
+})
+
+
+test('Test addDelay', () => {
+    const times = [
+        '02:20:06,181',
+        '02:20:06,100',
+        '01:27:50,100',
+        '00:00:03,177'        
+    ]
+
+    const delays = [
+        -17.547,
+        14.2408420,
+        -6.4208420,
+        -0.88
+    ]
+
+    const expected = [
+        '02:19:48,634',
+        '02:20:20,340',
+        '01:27:43,679',
+        '00:00:02,297'
+    ]
+
+    times.forEach((time, i) => {
+        const delayedTime = addDelay(time, delays[i])
+        expect(delayedTime).toBe(expected[i])
     })
 })
