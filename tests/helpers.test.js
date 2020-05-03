@@ -1,4 +1,4 @@
-import { cleanText, readSubtitlesAsync, convertSubsTime } from '../utils/helpers'
+import { cleanText, readSubtitlesAsync, convertSubsTime, convertSecondsTime } from '../utils/helpers'
 
 test('Test for clean test', () => {
     const texts_to_clean = [
@@ -37,24 +37,46 @@ test('Test for readSubtitlesAsync', async () => {
     expect(recieved_text).toBe(text)
 })
 
-test('Test Convert Subs Time', () => {
-    const times = [
+
+test('Test convertSubsTime', () => {
+    const subsTimes = [
         '02:20:06,181',
-        '00:20:06,001',
+        '00:20:06,010',
         '02:20:06,100',
         '01:27:50,101',
         '00:00:03,014'
     ]
-    const expectedTimes = [
+    const secondsTimes = [
         8406.181,
-        1206.001,
+        1206.010,
         8406.1,
         5270.101,
         3.014
     ]
 
-    times.forEach((time, i) => {
+    subsTimes.forEach((time, i) => {
         const timeInSeconds = convertSubsTime(time)
-        expect(timeInSeconds).toBe(expectedTimes[i])
+        expect(timeInSeconds).toBe(secondsTimes[i])
+    })
+})
+
+
+test('Test convertSecondsTime', () => {
+    const subsTimes = [
+        '02:20:06,181',
+        '02:20:06,100',
+        '01:27:50,100',
+        '00:00:03,177'
+    ]
+    const secondsTimes = [
+        8406.181,
+        8406.1,
+        5270.1,
+        3.177
+    ]
+
+    secondsTimes.forEach((time, i) => {
+        const timeInSubtitles = convertSecondsTime(time)
+        expect(timeInSubtitles).toBe(subsTimes[i])
     })
 })
