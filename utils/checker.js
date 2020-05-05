@@ -13,8 +13,8 @@ class Checker {
      *      subsFile (Element): The subtitles file input element.
      *      videoFile (Element): The video file input element.
      *      worker (Worker): The ffmpeg worker.
-     *      sp (SubtitleParser): The subtitle parser object. (Only loads after prepare is called).
      *      filename (String): The video filename. (Only loads after prepare is called).
+     *      sp (SubtitleParser): The subtitle parser object. (Only loads after prepare is called).
      *      setProgress (function): Function to set the progress.
      *      setMessage (function): Function to set message for the client.
      *      setError (function): Function to set error for the client.
@@ -65,6 +65,7 @@ class Checker {
         this.filename = `video.${this.extension}`
         this.setMessage('Writing file for editing...')
         await worker.write(this.filename, this.videoFile);
+        await worker.transcode(Constants.AUDIO_FILENAME, this.filename)
         this.setProgress(25)
         this.worker = worker
     }
@@ -89,7 +90,7 @@ class Checker {
 
     async checkDelay(start = 0, end = Constants.DEFAULT_SECTION_LENGTH) {
         /**
-         * Checks the delay of the subtitles compared to the video.
+         * Checks the delay of the subtitles compared to the audio.
          * 
          * Params:
          *      start (int): The start time to trim the video. (Sent by server)
@@ -100,6 +101,9 @@ class Checker {
          */
 
         const iteration = start / Constants.DEFAULT_SECTION_LENGTH
+        if(iteration >= Constants.MAX_ITERATION) {
+            throw 'Unable to find delay'
+        }
 
         // Progres: First iteration: 25, Second: 55, Third: 70, Fourth: 77, Fifth: 81 etc.
         let progress = 25 + Math.floor([...Array(iteration).keys()].map((num) => 30 / Math.pow(2, num)).reduce((a, b) => a + b, 0))
@@ -107,15 +111,14 @@ class Checker {
         this.setMessage('Checking delay...')
         const step = (30 / Math.pow(2, iteration))
 
-        const buffer = await this.trimVideo(start, end)
+        const buffer = await this.trimAudio(start, end)
         this.setProgress(Math.floor(progress + (step / 3)))
         const check_delay_url = this.server + Constants.CHECK_DELAY_ROUTE
         const check_delay_body = new FormData()
-        check_delay_body.append('file', new Blob([buffer], { type: this.videoFile.type}))
+        check_delay_body.append('file', new Blob([buffer], { type: Constants.AUDIO_MIME }))
         check_delay_body.append('start', start)
         check_delay_body.append('end', end)
         check_delay_body.append('subtitles', this.sp.subtitles)
-        check_delay_body.append('extension', this.extension)
 
         const request_content = {
             method: 'POST',
@@ -141,9 +144,9 @@ class Checker {
         }
     }
 
-    async trimVideo(start, end, extension = undefined) {
+    async trimAudio(start, end) {
         /**
-         * Trims a video and returns the buffer.
+         * Trims the audio and returns the buffer.
          *
          * Params:
          *      start (double): Start time in seconds.
@@ -153,14 +156,8 @@ class Checker {
          *       string: The buffer of the file.
          */
 
-        let trimed_filename = 'trimed.'
-        if (extension === undefined) {
-            trimed_filename += this.extension;
-        }
-        else {
-            trimed_filename += extension
-        }
-        await this.worker.trim(this.filename, trimed_filename, start, end, "-c copy -y");
+        let trimed_filename = `trimed.${AUDIO_EXTENSION}`
+        await this.worker.trim(Constants.AUDIO_FILENAME, trimed_filename, start, end, "-c copy -y");
         const { data } = await this.worker.read(trimed_filename);
         await this.worker.remove(trimed_filename);
         return data.buffer;
@@ -168,14 +165,22 @@ class Checker {
 
     async setUrl() {
         /**
-         * Sets and returns URL for the video.
+         * Creates and returns URL for the video.
          * 
          * Returns:
          *      String: The url
          */
 
-        const buffer = await this.trimVideo(Constants.PREVIEW_START_TIME, Constants.PREVIEW_END_TIME, Constants.PREVIEW_FILE_EXTENSION)
-        const url = URL.createObjectURL(new Blob([buffer], { type: Constants.PREVIEW_FILE_MIMETYPE }));
+        let videoToRead = this.filename
+
+        if (this.extension !== Constants.PREVIEW_FILE_EXTENSION) {
+            const transcodedVideoFilename = `transcoded.${Constants.PREVIEW_FILE_EXTENSION}`
+            await this.worker.transcode(this.filename, transcodedVideoFilename, '-c copy -y')
+            videoToRead = transcodedVideoFilename
+        }
+
+        const { data } = await this.worker.read(videoToRead)
+        const url = URL.createObjectURL(new Blob([data.buffer], { type: Constants.PREVIEW_FILE_MIMETYPE }));
         return url
     }
 }

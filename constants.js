@@ -14,3 +14,9 @@ export const PREVIEW_START_TIME = 0
 export const PREVIEW_END_TIME = 300
 export const PREVIEW_FILE_EXTENSION = 'mp4'
 export const PREVIEW_FILE_MIMETYPE = 'video/mp4'
+
+export const AUDIO_EXTENSION = 'wav'
+export const AUDIO_MIME = 'audio/wav'
+export const AUDIO_FILENAME = `audio.${AUDIO_EXTENSION}`
+
+export const MAX_ITERATION = 8
