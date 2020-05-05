@@ -1,4 +1,4 @@
-import { cleanText, readSubtitlesAsync, convertSubsTime, convertSecondsTime, addDelay } from '../utils/helpers'
+import { cleanText, convertSubsTime, convertSecondsTime, addDelay } from '../utils/helpers'
 
 test('Test for clean test', () => {
     const texts_to_clean = [
@@ -27,14 +27,6 @@ test('Test for clean test', () => {
         const cleaned_text = cleanText(text)
         expect(cleaned_text).toBe(target_texts[i])
     })
-})
-
-
-test('Test for readSubtitlesAsync', async () => {
-    const text = 'Lorem Ipsum'
-    const file = new File([text], 'subtitles.srt')
-    const recieved_text = await readSubtitlesAsync(file)
-    expect(recieved_text).toBe(text)
 })
 
 
