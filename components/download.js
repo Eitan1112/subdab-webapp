@@ -30,14 +30,14 @@ const Download = (props) => {
                 <Grid item xs={false} lg={4}></Grid>
                 <Grid item xs={12} sm={6} lg={2}>
                     <a id="download">
-                        <button className={[formStyles.formButton, styles.button].join(' ')}>
+                        <button id="download-subtitles" className={[formStyles.formButton, styles.button].join(' ')}>
                             Download Subtitles
                     </button>
                     </a>
                 </Grid>
                 <Grid item xs={12} sm={6} lg={2}>
                     <a>
-                        <button onClick={handleOpen} className={[formStyles.formButton, styles.button].join(' ')}>
+                        <button id="preview" onClick={handleOpen} className={[formStyles.formButton, styles.button].join(' ')}>
                             Preview
                         </button>
                     </a>

@@ -3,6 +3,8 @@ import styles from './index.module.css'
 import Header from '../components/header'
 import Form from '../components/form'
 import Head from 'next/head'
+import TagManager from 'react-gtm-module'
+
 
 class App extends React.Component {
   state = {
@@ -25,9 +27,18 @@ class App extends React.Component {
   }
 
   injectGA () {
+    
+    try {
+      const tagManagerArgs = {
+        gtmId: 'GTM-KNNMW2J'
+      }
+      TagManager.initialize(tagManagerArgs)
+    } catch { }
+    
     if (typeof window == 'undefined' || window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
       return;
     }
+    
     window.dataLayer = window.dataLayer || [];
     function gtag() {
       window.dataLayer.push(arguments);
@@ -36,6 +47,8 @@ class App extends React.Component {
   
     gtag('config', 'UA-110003673-3');
   };
+
+  
 
   render() {
     return (

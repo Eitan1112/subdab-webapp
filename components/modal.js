@@ -27,14 +27,14 @@ const Modal = (props) => {
                     <a href={document.getElementById('download').href}
                        download={document.getElementById('download').download}
                        className={styles.removeUnderline}>
-                        <button className={styles.button}>
+                        <button id="download-subtitles-modal" className={styles.button}>
                             Download Subtitles
                             </button>
                     </a>
                     {props.videoSrc}
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <button className={styles.button} onClick={handleContinueSync}>
+                    <button id="not-synced" className={styles.button} onClick={handleContinueSync}>
                         Not Synced - Continue
                     </button>
                 </Grid>

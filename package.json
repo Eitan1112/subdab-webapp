@@ -13,7 +13,8 @@
     "material-ui-dropzone": "^2.5.0",
     "next": "^9.3.5",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-gtm-module": "^2.0.8"
   },
   "scripts": {
     "dev": "next",
