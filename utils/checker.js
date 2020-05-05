@@ -53,8 +53,7 @@ class Checker {
 
         this.subsFile = document.getElementById('subtitles-file').files[0]
         this.videoFile = document.getElementById('video-file').files[0]
-        let subtitles = await this.subsFile.text()
-        subtitles = subtitles.replace(/(\r\n|\r|\n){2}/g, '$1').replace(/(\r\n|\r|\n){3,}/g, '$1\n');
+        const subtitles = await this.subsFile.text()
         this.sp = new SubtitlesParser(subtitles)
         this.setProgress(5)
         const worker = createWorker();
