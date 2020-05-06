@@ -81,6 +81,7 @@ const Form = (props) => {
          * Main entry function for syncing the subtitles.
          */
 
+        setDownloadOnly(hiddenOnly)
         const validation = validate()
         if (!validation.validated) {
             return alertError(validation.error)

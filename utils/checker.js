@@ -65,7 +65,6 @@ class Checker {
         this.filename = `video.${this.extension}`
         this.setMessage('Writing file for editing...')
         await worker.write(this.filename, this.videoFile);
-        await worker.transcode(Constants.AUDIO_FILENAME, this.filename)
         this.setProgress(25)
         this.worker = worker
     }
@@ -156,10 +155,10 @@ class Checker {
          *       string: The buffer of the file.
          */
 
-        let trimed_filename = `trimed.${AUDIO_EXTENSION}`
-        await this.worker.trim(Constants.AUDIO_FILENAME, trimed_filename, start, end, "-c copy -y");
-        const { data } = await this.worker.read(trimed_filename);
-        await this.worker.remove(trimed_filename);
+        const audioFilename = `trimmed_audio.${Constants.AUDIO_EXTENSION}`
+        await this.worker.trim(this.filename, audioFilename, start, end, '-map 0:a -c copy -y');
+        const { data } = await this.worker.read(audioFilename);
+        await this.worker.remove(audioFilename);
         return data.buffer;
     }
 
