@@ -9,6 +9,7 @@ import Checker from '../utils/checker'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert';
 import Dropzone from './dropzone'
+import Languages from './languages'
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -29,6 +30,8 @@ const Form = (props) => {
     const [videoSrc, setVideoSrc] = useState('')
     const [subSrc, setSubSrc] = useState('')
     const [globalChecker, setGlobalChecker] = useState()
+    const [videoLanguage, setVideoLanguage] = useState('en')
+    const [subtitlesLanguage, setSubtitlesLanguage] = useState('en')
 
     const handleSuccessClose = (event, reason) => {
         setSuccessOpen(false);
@@ -73,6 +76,12 @@ const Form = (props) => {
                 error: 'Please upload both the subtitles and video files.'
             }
         }
+        if(!videoLanguage || !subtitlesLanguage) {
+            return {
+                validation: false,
+                error: 'Please select languages for the video and subtitles.'
+            }
+        }
         return { validated: true }
     }
 
@@ -87,7 +96,7 @@ const Form = (props) => {
             return alertError(validation.error)
         }
         const t0 = performance.now()
-        const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError)
+        const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError, videoLanguage, subtitlesLanguage)
         setProgressOnly([]) // Show progress
         setInputDisabled(true)
         props.setRunning(true)
@@ -101,7 +110,7 @@ const Form = (props) => {
 
         await checkDelay(checker, false)
         const t1 = performance.now()
-        console.log(`Finished in ${t1 - t0}`)
+        console.log(`Finished in ${(t1 - t0) / 1000} seconds`)
     };
 
     const checkDelay = async (checker = globalChecker, isContinueCheckDelay = true) => {
@@ -169,6 +178,7 @@ const Form = (props) => {
                 </Grid>
                 <TimeItTakes />
             </Grid>
+            <Languages setSubtitlesLanguage={setSubtitlesLanguage} setVideoLanguage={setVideoLanguage} />
             <Start sync={main} disabled={inputDisabled} />
             <Progress only={progressOnly} progress={progress} message={message} />
             <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} continueCheckDelay={checkDelay} />

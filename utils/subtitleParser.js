@@ -51,7 +51,8 @@ class SubtitlesParser {
      *       String: The subtitles with the delay added.
      * */
 
-    const rows = this.subtitles.split('\r\n')
+    let rows = this.subtitles.split(/\r?\n/)
+
     let new_subtitles = ''
 
     for (const row of rows) {

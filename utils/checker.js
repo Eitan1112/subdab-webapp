@@ -19,9 +19,11 @@ class Checker {
      *      setMessage (function): Function to set message for the client.
      *      setError (function): Function to set error for the client.
      *      delaysFound (Array of objects): Array containing delays found (used if user decided the subtitles are not synced)
+     *      videoLanguage (str): The video language code.
+     *      subtitlesLanguage (str): The subtitles language code.
      */
 
-    constructor(server, setProgress, setMessage, setError) {
+    constructor(server, setProgress, setMessage, setError, videoLanguage, subtitlesLanguage) {
         /**
          * Constructor for Readers class.
          * 
@@ -30,6 +32,8 @@ class Checker {
          *      setProgress (function): Function to set the progress.
          *      setMessage (function): Function to set message for the client.
          *      setError (function): Function to set error for the client.
+         *      videoLanguage (str): The video language code.
+         *      subtitlesLanguage (str): The subtitles language code.
          */
 
         this.sp = undefined
@@ -39,6 +43,8 @@ class Checker {
         this.setError = setError
         this.server = server
         this.delaysFound = []
+        this.videoLanguage = videoLanguage
+        this.subtitlesLanguage = subtitlesLanguage        
     }
 
     async prepare() {
@@ -117,6 +123,8 @@ class Checker {
         check_delay_body.append('file', new Blob([buffer], { type: Constants.AUDIO_MIME }))
         check_delay_body.append('start', start)
         check_delay_body.append('end', end)
+        check_delay_body.append('subtitles_language', this.subtitlesLanguage)
+        check_delay_body.append('video_language', this.videoLanguage)
         check_delay_body.append('subtitles', this.sp.subtitles)
 
         const request_content = {
