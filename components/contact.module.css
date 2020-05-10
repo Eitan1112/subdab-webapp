@@ -1,0 +1,12 @@
+.container {
+    text-align: center
+}
+
+.email {
+    font-size:20px;
+    white-space: nowrap;
+}
+
+.emailIcon {
+    margin-top: 10px;
+}

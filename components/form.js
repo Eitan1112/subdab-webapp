@@ -10,6 +10,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert';
 import Dropzone from './dropzone'
 import Languages from './languages'
+import Contact from './contact'
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -196,6 +197,8 @@ const Form = (props) => {
                     {success}
                 </Alert>
             </Snackbar>
+            <Contact>
+            </Contact>
         </Grid>
     )
 }
