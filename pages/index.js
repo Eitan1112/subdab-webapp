@@ -26,8 +26,10 @@ class App extends React.Component {
     }
   }
 
-  injectGA () {
-    
+  injectGA () {    
+    if (typeof window == 'undefined' || window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
+      return;
+    }
     try {
       const tagManagerArgs = {
         gtmId: 'GTM-KNNMW2J'
@@ -35,9 +37,6 @@ class App extends React.Component {
       TagManager.initialize(tagManagerArgs)
     } catch { }
     
-    if (typeof window == 'undefined' || window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
-      return;
-    }
     
     window.dataLayer = window.dataLayer || [];
     function gtag() {

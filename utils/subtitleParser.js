@@ -16,7 +16,7 @@ class SubtitlesParser {
      * Constructor for the SubtitlesParser class.
      *
      * Params:
-     *     subtitles (String): The subtitles
+     *     subtitles (String): The subtitles.
      */
 
     this.subtitles = subtitles;

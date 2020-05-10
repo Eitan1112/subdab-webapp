@@ -5,12 +5,14 @@ import Start from './start'
 import Progress from './progress'
 import Download from './download'
 import { useState } from 'react'
+import SubtitleParser from '../utils/subtitleParser'
 import Checker from '../utils/checker'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert';
 import Dropzone from './dropzone'
 import Languages from './languages'
 import Contact from './contact'
+import { readSubtitlesAsync } from '../utils/helpers';
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -77,7 +79,7 @@ const Form = (props) => {
                 error: 'Please upload both the subtitles and video files.'
             }
         }
-        if(!videoLanguage || !subtitlesLanguage) {
+        if (!videoLanguage || !subtitlesLanguage) {
             return {
                 validation: false,
                 error: 'Please select languages for the video and subtitles.'
@@ -124,28 +126,35 @@ const Form = (props) => {
          */
 
         setDownloadOnly(hiddenOnly)
-        let delay
+        let delay, encoding, data
         try {
             if (isContinueCheckDelay) {
-                delay = await checker.continueCheckDelay()
+                data = await checker.continueCheckDelay()
             } else {
-                delay = await checker.checkDelay()
+                data = await checker.checkDelay()
             }
         } catch (err) {
             alertError(`Unexpected error while checking delay: ${err}`)
             return
         }
-        if (!delay) {
+        if (!data) {
             return alertError('Unable to find delay.')
         }
+        ({ delay, encoding } = data)
 
         setProgress(100)
         setInputDisabled(false)
         alertSuccess('Finished')
         setDownloadOnly([])
+
+        // Read subtitles, generate new file and set download button with download link
         const new_filename = checker.videoFile.name.split('.').slice(0, -1).join() + '.srt'
-        checker.sp.setDownload(new_filename, delay)
-        const subSrcResult = checker.sp.setUrl()
+        const subtitlesFile = document.getElementById('subtitles-file').files[0]
+        const subtitles = await readSubtitlesAsync(subtitlesFile, encoding)
+        const sp = new SubtitleParser(subtitles)
+        sp.setDownload(new_filename, delay)
+
+        const subSrcResult = sp.setUrl()
         setSubSrc(subSrcResult)
         const videoSrcResult = await checker.setUrl()
         setVideoSrc(videoSrcResult)

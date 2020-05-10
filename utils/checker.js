@@ -1,7 +1,5 @@
 import { createWorker } from "@ffmpeg/ffmpeg";
-import *  as Helpers from './helpers'
 import * as Constants from '../constants'
-import SubtitlesParser from './subtitleParser'
 
 class Checker {
     /**
@@ -14,7 +12,6 @@ class Checker {
      *      videoFile (Element): The video file input element.
      *      worker (Worker): The ffmpeg worker.
      *      filename (String): The video filename. (Only loads after prepare is called).
-     *      sp (SubtitleParser): The subtitle parser object. (Only loads after prepare is called).
      *      setProgress (function): Function to set the progress.
      *      setMessage (function): Function to set message for the client.
      *      setError (function): Function to set error for the client.
@@ -36,7 +33,6 @@ class Checker {
          *      subtitlesLanguage (str): The subtitles language code.
          */
 
-        this.sp = undefined
         this.filename = undefined
         this.setProgress = setProgress
         this.setMessage = setMessage
@@ -59,8 +55,6 @@ class Checker {
 
         this.subsFile = document.getElementById('subtitles-file').files[0]
         this.videoFile = document.getElementById('video-file').files[0]
-        const subtitles = await this.subsFile.text()
-        this.sp = new SubtitlesParser(subtitles)
         this.setProgress(5)
         const worker = createWorker();
         this.setProgress(8)
@@ -75,15 +69,15 @@ class Checker {
         this.worker = worker
     }
 
-    async set_download(element) {
-        /**
-         * Sets the download file element with downloading the new subtitles
-         */
+    // async set_download(element) {
+    //     /**
+    //      * Sets the download file element with downloading the new subtitles
+    //      */
 
-        const new_filename = this.filename.split('.')[0] + '.srt'
-        this.sp.set_download(element, new_filename, delay)
+    //     const new_filename = this.filename.split('.')[0] + '.srt'
+    //     this.sp.set_download(element, new_filename, delay)
 
-    }
+    // }
 
     async continueCheckDelay() {
         const lastDelayFound = this.delaysFound[this.delaysFound.length - 1]
@@ -102,7 +96,7 @@ class Checker {
          *      end (int): The end time to trim the video. (Sent by server)
          * 
          * Returns:
-         *      delay (float): The delay.
+         *      Object: {delay (str), encoding (str)}
          */
 
         const iteration = start / Constants.DEFAULT_SECTION_LENGTH
@@ -120,12 +114,12 @@ class Checker {
         this.setProgress(Math.floor(progress + (step / 3)))
         const check_delay_url = this.server + Constants.CHECK_DELAY_ROUTE
         const check_delay_body = new FormData()
-        check_delay_body.append('file', new Blob([buffer], { type: Constants.AUDIO_MIME }))
+        check_delay_body.append('audio', new Blob([buffer], { type: Constants.AUDIO_MIME }))
         check_delay_body.append('start', start)
         check_delay_body.append('end', end)
         check_delay_body.append('subtitles_language', this.subtitlesLanguage)
         check_delay_body.append('video_language', this.videoLanguage)
-        check_delay_body.append('subtitles', this.sp.subtitles)
+        check_delay_body.append('subtitles', new Blob([this.subsFile], { type: 'plain/text'}))
 
         const request_content = {
             method: 'POST',
@@ -138,11 +132,13 @@ class Checker {
         }
 
         const json_res = await res.json()
-        if (json_res.hasOwnProperty('delay')) {
+        if (json_res.hasOwnProperty('delay') && json_res.hasOwnProperty('encoding')) {
+            const delay = json_res.delay
+            const encoding = json_res.encoding
             this.delaysFound = this.delaysFound.concat({
-                delay: json_res.delay, start, end
+                delay: delay, start, end
             })
-            return json_res.delay
+            return {delay, encoding}
         } else {
             const new_start = start + Constants.DEFAULT_SECTION_LENGTH
             const new_end = end + Constants.DEFAULT_SECTION_LENGTH
