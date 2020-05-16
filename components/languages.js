@@ -17,7 +17,7 @@ const Languages = (props) => {
         if (value !== null) {
             props.setSubtitlesLanguage(value.code)
         } else {
-            props.setVideoLanguage(null)
+            props.setSubtitlesLanguage(null)
         }
     }
 
