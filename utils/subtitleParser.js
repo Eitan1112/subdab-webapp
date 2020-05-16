@@ -20,7 +20,7 @@ class SubtitlesParser {
      */
 
     this.subtitles = subtitles;
-    const regex = /(\d+)\r\n(\d\d:\d\d:\d\d,\d\d\d) --> (\d\d:\d\d:\d\d,\d\d\d)\r\n((?:.+\n)*.+)/gm;
+    const regex = /(\d+)\r\n?(\d\d:\d\d:\d\d,\d\d\d) --> (\d\d:\d\d:\d\d,\d\d\d)\r?\n((?:.+(?:\r|\n|\r\n))*.+)/gm;
     this.re_subs = Array.from(this.subtitles.matchAll(regex));
   }
 
