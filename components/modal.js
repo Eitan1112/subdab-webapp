@@ -14,7 +14,7 @@ const Modal = (props) => {
         <Grid item xs={12} lg={4}>
             <Grid container className={styles.modalBody}>
                 <Grid item xs={12}>
-                    <h1>View Sample</h1>
+                    <h1>Preview</h1>
                 </Grid>
                 <Grid item xs={12}>
                     <video type={Constants.PREVIEW_FILE_MIMETYPE} className={styles.video} controls>
