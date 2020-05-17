@@ -98,7 +98,6 @@ class SubtitlesParser {
 
     // Convert to vvt format
     let subs = 'WEBVTT\r\n\r\n' + this.synced_subtitles
-    console.log(this.synced_subtitles)
     subs = subs.replace(/,/g, '.')
 
     // Create file
