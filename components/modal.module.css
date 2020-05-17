@@ -13,12 +13,32 @@
 .modalBody {
     text-align: center;
     background-color: #303030;
-    padding-bottom: 10px;
-    border-radius: 5px;
+    border-radius: 15px;
     
 }
 
+.downloadButton {
+    border-right: 1px solid #eee !important
+}
+
 .button {
+    width: 100%;
+    display: block;
+    margin: 4px auto 0px auto;
+    background-color: transparent;
+    color: #eee;
+    border: 0px;
+    border-top: 1px solid #eee;
+    font-size: 20px;
+    padding: 10px 0px;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: rgba(240,240,240,0.3);
+}
+
+/* .button {
     width: 95% !important;
     margin: auto;
     display: block;
@@ -36,7 +56,7 @@
     background-color: #ccc;
     cursor: pointer;
     transition: background-color 0.2s
-}
+} */
 
 .video {
     max-width: 100%;
