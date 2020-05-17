@@ -20,8 +20,16 @@ class SubtitlesParser {
      */
 
     this.subtitles = subtitles;
+    this.re_subs = this.parseSubtitles(subtitles);
+  }
+
+  parseSubtitles(subtitles) {
+    /**
+     * Parses the subtitles using regex and return a multi-dimensional array with the specified groups.
+     */
+
     const regex = /(\d+)\r\n?(\d\d:\d\d:\d\d,\d\d\d) --> (\d\d:\d\d:\d\d,\d\d\d)\r?\n((?:.+(?:\r|\n|\r\n))*.+)/gm;
-    this.re_subs = Array.from(this.subtitles.matchAll(regex));
+    return Array.from(subtitles.matchAll(regex))
   }
 
   setDownload(filename, delay) {
@@ -75,8 +83,7 @@ class SubtitlesParser {
     }
     // Set synced subtitles
     this.synced_subtitles = new_subtitles
-    const regex = /(\d+)\r\n(\d\d:\d\d:\d\d,\d\d\d) --> (\d\d:\d\d:\d\d,\d\d\d)\r\n((?:.+\n)*.+)/gm;
-    this.re_synced_subtitles = Array.from(new_subtitles.matchAll(regex));
+    this.re_synced_subtitles = this.parseSubtitles(new_subtitles);
 
     return new_subtitles
   }

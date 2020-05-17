@@ -99,6 +99,7 @@ class Checker {
          *      Object: {delay (str), encoding (str)}
          */
 
+        return 0 // TOOD Remove
         const iteration = start / Constants.DEFAULT_SECTION_LENGTH
         if(iteration >= Constants.MAX_ITERATION) {
             throw 'Unable to find delay'
