@@ -59,7 +59,7 @@ class SubtitlesParser {
      *       String: The subtitles with the delay added.
      * */
 
-    let rows = this.subtitles.split(/\r?\n/)
+    let rows = this.subtitles.split(/(\r|\n|\r\n)/)
 
     let new_subtitles = ''
 
@@ -70,7 +70,7 @@ class SubtitlesParser {
 
       // If row is not timestamp
       if (match === undefined || match.length == 0) {
-        new_subtitles += row + '\r\n'
+        new_subtitles += `${row}`
         continue
       }
 
@@ -78,7 +78,7 @@ class SubtitlesParser {
       // If row is timestamp -> Calculate new time and append
       const start_time = addDelay(match[0][1], delay)
       const end_time = addDelay(match[0][2], delay)
-      const new_row = `${start_time} --> ${end_time}\r\n`
+      const new_row = `${start_time} --> ${end_time}`
       new_subtitles += new_row
     }
     // Set synced subtitles
@@ -98,6 +98,7 @@ class SubtitlesParser {
 
     // Convert to vvt format
     let subs = 'WEBVTT\r\n\r\n' + this.synced_subtitles
+    console.log(this.synced_subtitles)
     subs = subs.replace(/,/g, '.')
 
     // Create file
