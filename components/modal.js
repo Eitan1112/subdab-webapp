@@ -31,12 +31,11 @@ const Modal = (props) => {
                                 Download Subtitles
                             </button>
                         </a>
-                        {props.videoSrc}
                     </Grid>
                     <Grid item xs={12} lg={6}>
                         <button id="not-synced" className={styles.button} onClick={handleContinueSync}>
                             Not Synced - Continue
-                    </button>
+                        </button>
                     </Grid>
                 </Grid>
             </Grid>
