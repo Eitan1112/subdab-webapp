@@ -27,7 +27,7 @@ const Languages = (props) => {
             <Grid item lg={2} xs={12}>
                 <Autocomplete
                     id="video-language"
-                    defaultValue={{code: 'en', name: 'English'}}
+                    defaultValue={videoLanguages[0]}
                     onChange={handleVideoLanguageChange}
                     options={videoLanguages}
                     getOptionLabel={(option) => option.name}
@@ -37,7 +37,7 @@ const Languages = (props) => {
             <Grid item lg={2} xs={12}>
                 <Autocomplete
                     id="subtitles-language"
-                    defaultValue={{code: 'en', name: 'English'}}
+                    defaultValue={subtitlesLanguages[0]}
                     onChange={handleSubtitlesLanguageChange}
                     options={subtitlesLanguages}
                     getOptionLabel={(option) => option.name}
