@@ -34,7 +34,7 @@ const Form = (props) => {
     const [subSrc, setSubSrc] = useState('')
     const [globalChecker, setGlobalChecker] = useState()
     const [videoLanguage, setVideoLanguage] = useState('en')
-    const [subtitlesLanguage, setSubtitlesLanguage] = useState('en')
+    const [subtitlesLanguage, setSubtitlesLanguage] = useState('ad')
 
     const handleSuccessClose = (event, reason) => {
         setSuccessOpen(false);
