@@ -173,6 +173,7 @@ const Form = (props) => {
                         alertError={alertError}
                         alertSuccess={alertSuccess}
                         accept={['video/*']}
+                        extensions={['mp4', 'mkv', 'm4v', 'avi', 'webm', 'ogg']}
                         id="video-file"
                         text="Load Video" />
                 </Grid>
@@ -182,7 +183,7 @@ const Form = (props) => {
                         alertError={alertError}
                         alertSuccess={alertSuccess}
                         accept={['', 'plain/text']}
-                        extension={'srt'}
+                        extensions={['srt']}
                         id="subtitles-file"
                         text="Load Subtitles" />
                 </Grid>

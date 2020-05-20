@@ -12,7 +12,7 @@ const Dropzone = (props) => {
      *      accept (Array): Array of strings containing accepted MIME types.
      *      id (string): ID for the file input.
      *      text (string): Default text
-     *      extension (string) (OPTIONAL): Extension to enforce on files.
+     *      extensions (Array) (OPTIONAL): Extensions to verify.
      */
 
     const [file, setFile] = useState()
@@ -22,9 +22,11 @@ const Dropzone = (props) => {
         if(fileCount === 0) {
             return setFile()
         } else if(fileCount === 1) {
-            if(props.extension && files[0].name.slice(-3) !== props.extension) {
+            if(props.extensions && !props.extensions.includes(files[0].name.slice(-3))) {
                 document.getElementById(props.id).files = null
-                return props.alertError(`Only file with '${props.extension}' extension are allowed.`)
+                const extensions_str = props.extensions.join(", ")
+                extensions_str.substring(0, extensions_str.length - 1) // Remove last comma
+                return props.alertError(`Only files with ${extensions_str} extension are allowed.`)
             }
             setFile({
                 name: files[0].name,
