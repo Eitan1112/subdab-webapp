@@ -1,7 +1,16 @@
 export const videoLanguages = [
     { code: 'en', name: 'English' },
     { code: 'fr', name: 'French' },
-    { code: 'it', name: 'Italian' }
+    { code: 'it', name: 'Italian' },
+    { code: 'es', name: 'Spanish' },
+    { code: 'mx', name: 'Spanish (Mexican)'},
+    { code: 'de', name: 'German'},
+    { code: 'el', name: 'Greek'},
+    { code: 'hi', name: 'Hindi'},
+    { code: 'kz', name: 'Kazakh'},
+    { code: 'nl', name: 'Dutch'},
+    { code: 'ru', name: 'Russian'},
+    { code: 'zh', name: 'Chinese'}
 ]
 
 export const subtitlesLanguages = [
