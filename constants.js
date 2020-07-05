@@ -1,6 +1,6 @@
 // Data
-export const MIN_VALID_INDEXES = 20
 export const DEFAULT_SECTION_LENGTH = 300
+export const SUBTITLES_RADIUS = 22 // Need to be synced with backend
 
 // Routes
 export const CHECK_SYNC_ROUTE = '/check_sync'

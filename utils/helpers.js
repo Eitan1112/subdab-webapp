@@ -10,6 +10,7 @@ export const cleanText = (text) => {
    */
 
   text = text.replace("\n", " ");
+  text = text.split(':')[1] // Remove Narrators 
 
   // Remove HTML tags, text in curly, regular or square brackets and text in *
   text = text.replace(/((?:<|\[|\(|\*|\{).+?(?:>|\)|}|]|\*))/gi, "");
