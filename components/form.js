@@ -99,6 +99,7 @@ const Form = (props) => {
             return alertError(validation.error)
         }
         const t0 = performance.now()
+        console.log(`API Server: ${process.env.API_SERVER}`)
         const checker = new Checker(process.env.API_SERVER, setProgress, setMessage, alertError, videoLanguage, subtitlesLanguage)
         setProgressOnly([]) // Show progress
         setInputDisabled(true)
