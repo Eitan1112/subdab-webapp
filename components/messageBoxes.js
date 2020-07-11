@@ -29,7 +29,7 @@ export const TimeItTakes = () => (
                         How much time will it take?
                         </h3>
                     <p>
-                        It usually takes 2-3 minutes. <br />
+                        It usually takes 1-3 minutes. <br />
                             However, it can take longer if there are a lot of background noises or poor audio quality. Anyway, don't be worried if the progres bar gets stuck for a minute, it is waiting for the server response.
                         </p>
                 </div>
