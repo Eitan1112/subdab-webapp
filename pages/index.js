@@ -4,6 +4,7 @@ import Header from '../components/header'
 import Form from '../components/form'
 import Head from 'next/head'
 import TagManager from 'react-gtm-module'
+import Navbar from '../components/navbar'
 
 
 class App extends React.Component {
@@ -61,8 +62,8 @@ class App extends React.Component {
           <meta httpEquiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         </Head>
-        <Header />
-        <Form setRunning={(running) => this.setState({ running })} />
+        <Navbar />
+        {/**<Form setRunning={(running) => this.setState({ running })} />*/}
       </div>
     )
   }
