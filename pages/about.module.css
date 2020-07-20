@@ -1,0 +1,15 @@
+.container {
+    padding-left: 20px;
+    width: 70%
+}
+
+.paragraph {
+    font-size: 18px;
+}
+
+.magician {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 70%;
+}
