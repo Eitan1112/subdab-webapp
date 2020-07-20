@@ -13,3 +13,10 @@
     bottom: 0;
     height: 70%;
 }
+
+@media (max-width: 599px) {
+    .container {
+        width: calc(100% - 20px);
+        padding: 10px;
+    }
+}
