@@ -28,10 +28,6 @@ const MobileNavbar = () => {
         navbarOpen && (
         <div  className={styles.mobileMenu}>
             {
-                router.pathname !== "/download" && 
-                <div className={styles.mobileNavbarItem}><a href="/download">Download</a><br /></div>
-            }
-            {
                 router.pathname !== "/" && 
                 <div className={styles.mobileNavbarItem}><a href="/">Sync</a><br /></div>
             }
@@ -55,11 +51,8 @@ const DesktopNavbar = () => {
     return (
     <Grid container className={styles.navbar}>
         <Grid item md={4}>
-            <object type="image/svg+xml" data="/logo.svg" />
-        </Grid> 
-        <Grid item md={1} className={styles.navbarItem}>
-            <a href="/download" className={router.pathname !== "/download" ? styles.inactive : styles.active}>
-                Download
+            <a href="/">
+                <img src="/logo.svg" />
             </a>
         </Grid> 
         <Grid item md={1} className={styles.navbarItem}>
@@ -67,7 +60,7 @@ const DesktopNavbar = () => {
                 Sync
             </a>
         </Grid>   
-        <Grid item md={1}className={styles.navbarItem}>
+        <Grid item md={2}className={styles.navbarItem}>
             <a href="/about" className={router.pathname !== "/about" ? styles.inactive : styles.active}>
                 About
             </a>
