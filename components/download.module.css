@@ -1,7 +1,16 @@
 .button {
-    width:98%;
-    display:block;
-    margin: auto;
+    width    : calc(100% - 8px);
+    display  : block;
+    margin   : auto;
     font-size: 18px;
-    margin: 5px auto !important
+}
+
+@media (max-width: 599px) {
+    .container {
+        padding: 0px 30px;
+    }
+    
+    .downloadButton {
+        margin-bottom: 10px;
+    }
 }

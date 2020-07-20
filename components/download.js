@@ -8,7 +8,7 @@ import ModalBody from './modal'
 
 
 const Download = (props) => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true); // TODO CHange to false
 
     const handleOpen = () => {
         setOpen(true);
@@ -21,21 +21,22 @@ const Download = (props) => {
     const modalBody = (<div><ModalBody 
         continueCheckDelay={props.continueCheckDelay} 
         videoSrc={props.videoSrc} 
+        close={handleClose}
         subSrc={props.subSrc}/></div>)
 
 
     return (
         <Hidden only={props.only}>
-            <Grid container>
-                <Grid item xs={false} lg={4}></Grid>
-                <Grid item xs={12} sm={6} lg={2}>
+            <Grid container className={styles.container}>
+                <Grid item xl={4} lg={4} md={3} sm={2} xs={false}></Grid>
+                <Grid item xl={2} lg={2} md={3} sm={4} xs={12}>
                     <a id="download">
-                        <button id="download-subtitles" className={[formStyles.formButton, styles.button].join(' ')}>
-                            Download Subtitles
+                        <button id="download-subtitles" className={[formStyles.formButton, styles.button, styles.downloadButton].join(' ')}>
+                            Download Subs
                     </button>
                     </a>
                 </Grid>
-                <Grid item xs={12} sm={6} lg={2}>
+                <Grid item xl={2} lg={2} md={3} sm={4} xs={12}>
                     <a>
                         <button id="preview" onClick={handleOpen} className={[formStyles.formButton, styles.button].join(' ')}>
                             Preview

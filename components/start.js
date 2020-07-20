@@ -6,8 +6,9 @@ const Start = (props) => (
     <Grid container className={styles.container}>
         {/* Start button */}
         <Grid container>
-            <Grid item lg={4} xs={false}></Grid>
-            <Grid item lg={4} xs={12}>
+       
+            <Grid item xl={4} lg={4} md={3} sm={2} xs={false}></Grid>
+            <Grid item lg={4} md={6} sm={8} xs={12}>
                 <button 
                 id="start-button" 
                 disabled={props.disabled} 

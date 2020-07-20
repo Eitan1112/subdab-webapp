@@ -31,6 +31,10 @@ body {
     color: #EFC69B !important;
 }
 
+.MuiLinearProgress-bar {
+    background-color: #5B534A !important;
+}
+
 @font-face {
     font-family: GoudyOldStyleRegular;
     src: url(Goudy.ttf)

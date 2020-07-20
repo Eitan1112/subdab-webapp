@@ -5,21 +5,21 @@ import Hidden from '@material-ui/core/Hidden'
 
 const Progress = (props) => (
     <Hidden only={props.only}>
-        <Grid container>
-            <Grid container className={styles.statusContainer}>
-                <Grid item xs={false} lg={4}></Grid>
-                <Grid item xs={12} lg={4}>
-                    <LinearProgress variant="determinate" value={props.progress} />
+        <Grid container className={styles.container}>
+            <Grid container>
+                <Grid item lg={4} md={3} sm={2} xs={false}></Grid>
+                <Grid item lg={4} md={6} sm={8} xs={12}>
+                    <LinearProgress className={styles.progress} variant="determinate" value={props.progress} />
                 </Grid>
             </Grid>
             <Grid container>
-                <Grid item xs={false} lg={4}></Grid>
-                <Grid item xs={6} lg={2}>
+                <Grid item lg={4} md={3} sm={2} xs={false}></Grid>
+                <Grid item lg={2} md={3} sm={4} xs={6}>
                     <h3>
                         Progress: {props.progress}%
                     </h3>
                 </Grid>
-                <Grid item xs={6} lg={2} className={styles.message}>
+                <Grid item lg={2} md={3} sm={4} xs={6} className={styles.message}>
                     <h3>
                         {props.message}
                     </h3>
