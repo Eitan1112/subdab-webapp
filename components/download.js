@@ -8,7 +8,7 @@ import ModalBody from './modal'
 
 
 const Download = (props) => {
-    const [open, setOpen] = useState(true); // TODO CHange to false
+    const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
         setOpen(true);
