@@ -6,6 +6,8 @@
     border-radius: 20px;
     position     : relative;
     box-sizing: border-box;
+    display: block;
+    margin: auto;
 }
 
 .text {

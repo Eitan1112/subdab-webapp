@@ -5,7 +5,7 @@ body {
 
 * {
     font-family: Calibri;
-    color: #303030;
+    color: #EFC69B;
     font-weight: 300;
 }
 
@@ -21,9 +21,14 @@ body {
     font-size: 22px;
 }
 
-.MuiTooltip-popper *, .MuiTooltip-popperArrow * {
-    font-size: 16px !important;
-    background-color: #303030 !important;
+.MuiAutocomplete-popper * {
+    background-color: #EFC69B !important;
+    color: #363636 !important;
+}
+
+.MuiAutocomplete-option[aria-selected="true"] {
+    background-color: #5B534A !important;
+    color: #EFC69B !important;
 }
 
 @font-face {

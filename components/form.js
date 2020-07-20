@@ -10,7 +10,6 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert';
 import Dropzone from './dropzone'
 import Languages from './languages'
-import Contact from './contact'
 import { readSubtitlesAsync } from '../utils/helpers';
 import * as Constants from '../constants'
 
@@ -177,8 +176,8 @@ const Form = (props) => {
             {/* Message boxes and upload files input */}
             <br />
             <Grid container className={styles.fileInputContainer}>
-                <Grid item xl={4} lg={3} md={2} sm={1} xs={false}></Grid>
-                <Grid item xl={2} lg={3} md={4} sm={5} xs={12} className={styles.videoDropzoneContainer}>
+                <Grid item xl={4} lg={4} md={3} sm={2} xs={false}></Grid>
+                <Grid item xl={2} lg={2} md={3} sm={4} xs={12} className={styles.videoDropzoneContainer}>
                     <Dropzone
                         disabled={inputDisabled}
                         alertError={alertError}
@@ -190,7 +189,7 @@ const Form = (props) => {
                     <img src="/play.svg" className={styles.playBackground} />
                     </Dropzone>
                 </Grid>
-                <Grid item xl={2} lg={3} md={4} sm={5} xs={12}>
+                <Grid item xl={2} lg={2} md={3} sm={4} xs={12}>
                     <Dropzone
                         disabled={inputDisabled}
                         alertError={alertError}
@@ -204,7 +203,7 @@ const Form = (props) => {
                 </Grid>
             </Grid>
             <Languages setSubtitlesLanguage={setSubtitlesLanguage} setVideoLanguage={setVideoLanguage} />
-            <Start sync={main} disabled={inputDisabled} />
+            <Start sync={main} disabled={inputDisabled} running={props.running} />
             <Progress only={progressOnly} progress={progress} message={message} />
             <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} continueCheckDelay={checkDelay} />
 
@@ -219,8 +218,6 @@ const Form = (props) => {
                     {success}
                 </Alert>
             </Snackbar>
-            <Contact>
-            </Contact>
         </Grid>
     )
 }

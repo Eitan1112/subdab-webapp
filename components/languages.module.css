@@ -1,3 +1,31 @@
 .container {
     margin-top: 15px;
 }
+
+.autoComplete {
+    width: calc(100% - 8px) !important;
+    display: block;
+    margin: auto;
+}
+
+.container * {
+    color: #EFC69B !important;
+    border-color: #EFC69B !important;
+    border-width: 3px !important;
+}
+
+@media (max-width: 599px) {
+    .container {
+        padding: 0px 30px;
+    }
+
+    .videoLanguageWrapper {
+        margin-bottom: 15px !important;
+        padding: 0px 
+    }
+    
+    .subtitlesLanguageWrapper {
+        padding: 0px
+    }
+}
+

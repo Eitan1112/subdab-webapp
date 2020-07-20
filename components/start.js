@@ -8,11 +8,17 @@ const Start = (props) => (
         <Grid container>
             <Grid item lg={4} xs={false}></Grid>
             <Grid item lg={4} xs={12}>
-                <button id="start-button" disabled={props.disabled} onClick={props.disabled ? null : props.sync} className={formStyles.formButton}>Start</button>
+                <button 
+                id="start-button" 
+                disabled={props.disabled} 
+                onClick={props.disabled ? null : props.sync} 
+                className={formStyles.formButton}
+                >
+                    {props.running ? "Stop" : "Start"}
+                </button>
             </Grid>
         </Grid>
     </Grid>
 )
-
 
 export default Start

@@ -23,9 +23,10 @@ const Languages = (props) => {
 
     return (
         <Grid container className={styles.container}>
-            <Grid item xs={4} />
-            <Grid item lg={2} xs={12}>
+            <Grid item xl={4} lg={4} md={3} sm={2} xs={false} />
+            <Grid item xl={2} lg={2} md={3} sm={4} xs={12} className={styles.videoLanguageWrapper}>
                 <Autocomplete
+                    className={styles.autoComplete}
                     id="video-language"
                     defaultValue={videoLanguages[0]}
                     onChange={handleVideoLanguageChange}
@@ -34,8 +35,9 @@ const Languages = (props) => {
                     renderInput={(params) => <TextField {...params} label="Video Language" variant="outlined" />}
                 />
             </Grid>
-            <Grid item lg={2} xs={12}>
+            <Grid item xl={2} lg={2} md={3} sm={4} xs={12} className={styles.subtitlesLanguageWrapper}>
                 <Autocomplete
+                className={styles.autoComplete}
                     id="subtitles-language"
                     defaultValue={subtitlesLanguages[0]}
                     onChange={handleSubtitlesLanguageChange}

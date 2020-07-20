@@ -7,18 +7,20 @@
 }
 
 .formButton {
-    background-color: #303030;
+    background-color: #EFC69B;
     border          : 0px;
-    color           : white;
+    color           : #363636;
     padding         : 12px 30px;
     font-size       : 25px;
     border-radius   : 2px;
-    width           : 100%;
+    width           : calc(100% - 8px);
+    display         : block;
+    margin          : auto;
     transition      : background-color 0.2s;
 }
 
 .formButton:hover {
-    background-color: #404040;
+    background-color: #E8AF73;
     transition      : background-color 0.2s;
     cursor          : pointer;
 }
@@ -30,21 +32,21 @@
 
 .playBackground {
     position: absolute;
-    top: 0;
-    left: 0;
+    top     : 0;
+    left    : 0;
 }
 
 .subtitlesBackground {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    bottom  : 0;
+    left    : 0;
+    width   : 100%;
 }
 
 
 @media (max-width: 599px) {
     .fileInputContainer {
-        height: 350px !important;
+        height : 350px !important;
         padding: 0px 30px
     }
 
