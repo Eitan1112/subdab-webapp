@@ -45,6 +45,7 @@ const Dropzone = (props) => {
                     file.name
                     }
             </div>
+            {props.children}
         </div>
     )
 }

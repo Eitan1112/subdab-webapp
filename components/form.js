@@ -1,10 +1,9 @@
 import styles from './form.module.css'
 import Grid from '@material-ui/core/Grid';
-import { HowItWorks, TimeItTakes, HowItWorksMobile, TimeItTakesMobile } from './messageBoxes'
 import Start from './start'
 import Progress from './progress'
 import Download from './download'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SubtitleParser from '../utils/subtitleParser'
 import Checker from '../utils/checker'
 import Snackbar from '@material-ui/core/Snackbar'
@@ -13,6 +12,8 @@ import Dropzone from './dropzone'
 import Languages from './languages'
 import Contact from './contact'
 import { readSubtitlesAsync } from '../utils/helpers';
+import * as Constants from '../constants'
+
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -35,6 +36,12 @@ const Form = (props) => {
     const [globalChecker, setGlobalChecker] = useState()
     const [videoLanguage, setVideoLanguage] = useState('en')
     const [subtitlesLanguage, setSubtitlesLanguage] = useState('ad')
+    const [innerWidth, setInnerWidth] = useState(undefined)
+
+    useEffect(() => {
+        setInnerWidth(window.innerWidth)
+        console.log(window.innerWidth)
+    })
 
     const handleSuccessClose = (event, reason) => {
         setSuccessOpen(false);
@@ -165,10 +172,10 @@ const Form = (props) => {
     return (
         <Grid container className={styles.container}>
             {/* Message boxes and upload files input */}
-            <Grid container>
-                <Grid item md={false} lg={false} xl={1}></Grid>
-                <HowItWorks />
-                <Grid item lg={2} xs={12}>
+            <br />
+            <Grid container className={styles.fileInputContainer}>
+                <Grid item xl={4} lg={3} md={2} sm={1} xs={false}></Grid>
+                <Grid item xl={2} lg={3} md={4} sm={5} xs={12} className={styles.videoDropzoneContainer}>
                     <Dropzone
                         disabled={inputDisabled}
                         alertError={alertError}
@@ -176,9 +183,11 @@ const Form = (props) => {
                         accept={['video/*']}
                         extensions={['mp4', 'mkv', 'm4v', 'avi', 'webm', 'ogg']}
                         id="video-file"
-                        text="Load Video" />
+                        text="Load Video" >
+                    <img src="/play.svg" className={styles.playBackground} />
+                    </Dropzone>
                 </Grid>
-                <Grid item lg={2} xs={12}>
+                <Grid item xl={2} lg={3} md={4} sm={5} xs={12}>
                     <Dropzone
                         disabled={inputDisabled}
                         alertError={alertError}
@@ -186,18 +195,17 @@ const Form = (props) => {
                         accept={['', 'plain/text']}
                         extensions={['srt']}
                         id="subtitles-file"
-                        text="Load Subtitles" />
+                        text="Load Subtitles">
+                    <img src={innerWidth !== undefined && innerWidth < Constants.XS_BREAKPOINT ? 'stretchedSubtitles.svg' : 'subtitles.svg'} className={styles.subtitlesBackground} />
+                    </Dropzone>
                 </Grid>
-                <TimeItTakes />
             </Grid>
             <Languages setSubtitlesLanguage={setSubtitlesLanguage} setVideoLanguage={setVideoLanguage} />
             <Start sync={main} disabled={inputDisabled} />
             <Progress only={progressOnly} progress={progress} message={message} />
             <Download only={downloadOnly} videoSrc={videoSrc} subSrc={subSrc} continueCheckDelay={checkDelay} />
-            <HowItWorksMobile />
 
             {/* Alerts */}
-            <TimeItTakesMobile />
             <Snackbar open={errorOpen} autoHideDuration={7000} onClose={handleErrorClose}>
                 <Alert severity="error" onClose={handleErrorClose}>
                     {error}

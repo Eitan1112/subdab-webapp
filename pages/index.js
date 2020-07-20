@@ -64,7 +64,7 @@ class App extends React.Component {
         </Head>
         <Navbar />
         <Headers />
-        {/**<Form setRunning={(running) => this.setState({ running })} />*/}
+        <Form setRunning={(running) => this.setState({ running })} />
       </div>
     )
   }

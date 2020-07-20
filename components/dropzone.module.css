@@ -2,20 +2,21 @@
     width        : calc(100% - 8px); 
     height       : 100%;
     min-height   : 100px;
-    border       : 4px dashed #303030;
-    /* border-radius: 20px; */
+    border       : 8px dashed #EFC69B;
+    border-radius: 20px;
     position     : relative;
+    box-sizing: border-box;
 }
 
 .text {
-    width      : 50%;
-    display    : block;
+    width      : 90%;
     margin     : auto;
+    display    : block;
     height     : 100%;
     text-align : center;
     padding-top: 30px;
-    color      : #303030;
-    font-size  : 20px;
+    color      : #EFC69B;
+    font-size  : 30px;
     word-break: break-all;
 }
 
@@ -29,4 +30,10 @@
     opacity : 0;
     cursor: pointer;
     z-index: 10;
+}
+
+.backgroundImage {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
