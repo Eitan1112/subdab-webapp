@@ -16,6 +16,7 @@ const Dropzone = (props) => {
      */
 
     const [file, setFile] = useState()
+
     const handleChange = () => {
         const files = document.getElementById(props.id).files
         const fileCount = Array.from(files).length
@@ -38,7 +39,7 @@ const Dropzone = (props) => {
     return (
         <div className={styles.container}>
             <input disabled={props.disabled} className={styles.input} type="file" id={props.id} onChange={handleChange} accept={props.accept} />
-            <div className={styles.text}>{
+            <div className={file === undefined ? styles.text : [styles.text, styles.textFileLoaded].join(' ') }>{
                 file === undefined ? 
                     props.text
                     :

@@ -20,6 +20,10 @@
     word-break: break-all;
 }
 
+.textFileLoaded {
+    font-size: 22px;
+}
+
 .input {
     position: absolute;
     height  : 100%;

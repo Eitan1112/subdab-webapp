@@ -36,11 +36,14 @@ const Form = (props) => {
     const [globalChecker, setGlobalChecker] = useState()
     const [videoLanguage, setVideoLanguage] = useState('en')
     const [subtitlesLanguage, setSubtitlesLanguage] = useState('ad')
-    const [innerWidth, setInnerWidth] = useState(undefined)
+    const [innerWidth, setInnerWidth] = useState()
 
+    // Set the innerWidth variable when the screen is loaded and when resized
     useEffect(() => {
+        window.addEventListener("resize", () => {
+            setInnerWidth(window.innerWidth)
+        })
         setInnerWidth(window.innerWidth)
-        console.log(window.innerWidth)
     })
 
     const handleSuccessClose = (event, reason) => {
