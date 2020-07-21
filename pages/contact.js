@@ -2,17 +2,31 @@ import Navbar from '../components/navbar'
 import Grid from '@material-ui/core/Grid'
 import styles from './contact.module.css'
 import formStyles from '../components/form.module.css'
+import MuiAlert from '@material-ui/lab/Alert';
+import {useState} from 'react';
+import Snackbar from '@material-ui/core/Snackbar';
+
+const Alert = (props) => {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const Contact = () => {
+    const [successOpen, setSuccessOpen] = useState(false)
+    const [errorOpen, setErrorOpen] = useState(false)
+    const [error, setError] = useState()
+    
     const submitForm = async () => {
-        // Validate
         const name = document.getElementById('name').value
         const email = document.getElementById('email').value
         const message = document.getElementById('message').value
-        console.log(name, email, message)
+
+        // Validate
         if (email === "" || message === "") {
-            return alert('False')
+            setError('Please fill email address and message fields.')
+            setErrorOpen(true)
+            return
         }
+
         await fetch('/api/email',
             {
                 method: 'POST',
@@ -23,7 +37,11 @@ const Contact = () => {
                 body: JSON.stringify({ name, email, message })
             }
         )
-        console.log('Finsihed')
+        
+        setSuccessOpen(true)
+        document.getElementById('name').value = ""
+        document.getElementById('email').value = ""
+        document.getElementById('message').value = ""
     }
 
     return (
@@ -39,6 +57,16 @@ const Contact = () => {
                     <button className={[formStyles.formButton, styles.button].join(' ')} onClick={submitForm}>Send</button>
                 </Grid>
             </Grid>
+            <Snackbar open={errorOpen} autoHideDuration={4000} onClose={() => setErrorOpen(false)}>
+                <Alert severity="error" onClose={() => setErrorOpen(false)}>
+                    {error}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={successOpen} autoHideDuration={4000} onClose={() => setSuccessOpen(false)}>
+                <Alert severity="success" onClose={() => setSuccessOpen(false)}>
+                    Response Sent!
+                </Alert>
+            </Snackbar>
         </div>
     )
 }

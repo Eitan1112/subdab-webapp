@@ -35,7 +35,12 @@ body {
     background-color: #5B534A !important;
 }
 
-@font-face {
-    font-family: GoudyOldStyleRegular;
-    src: url(Goudy.ttf)
+.MuiAlert-filledError, .MuiAlert-filledError * {
+    color: #EFC69B !important;
+    background-color: #6A3937 !important;
+}
+
+.MuiAlert-filledSuccess, .MuiAlert-filledSuccess * {
+    color: #EFC69B !important;
+    background-color: #246B30 !important;
 }
