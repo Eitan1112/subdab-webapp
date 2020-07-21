@@ -57,7 +57,7 @@ class App extends React.Component {
           <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110003673-3"></script>
           <script>{this.injectGA()}</script>
 
-          <title>Syncit - Automatic Subtitles Syncer</title>
+          <title>Subdab - Automatic Subtitles Syncer</title>
           <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
           <meta httpEquiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
