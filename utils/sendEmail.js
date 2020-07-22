@@ -1,19 +1,36 @@
-const sgMail = require('@sendgrid/mail');
+import * as Constants from '../constants'
+const fetch = require('node-fetch');
 
-const sendEmail = (name, email, message) => {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  const msg = {
-    to: 'eitan1112@gmail.com',
-    from: 'noreply@subdab.com',
-    subject: 'New Response On Subdab',
-    text: `
-    New message from ${name}.
-    His email address is ${email}.
-    Message:
-    ${message}
-    `
-  };
-  sgMail.send(msg);
+const sendEmail = async (name, email, message) => {
+  const response = await fetch(Constants.SENDGRID_API, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`
+    },
+    body: JSON.stringify({
+      personalizations: [
+        {
+          to: [
+            {
+              email: 'eitan1112@gmail.com'
+            }
+          ],
+          subject: 'New Response in Subdab'
+        }
+      ],
+      from: {
+        email: 'noreply@subdab.com',
+        name: 'Subdab'
+      },
+      content: [
+        {
+          type: 'text/html',
+          value: `New response in subdab.\nName: ${name}.\nEmail: ${email}.\nMessage: ${message}`
+        }
+      ]
+    })
+  });
 }
 
-export {sendEmail}
+export { sendEmail }

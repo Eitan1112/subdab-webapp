@@ -22,3 +22,5 @@ export const AUDIO_FILENAME = `audio.${AUDIO_EXTENSION}`
 export const MAX_ITERATION = 8
 
 export const XS_BREAKPOINT = 600
+
+export const SENDGRID_API = 'https://api.sendgrid.com/v3/mail/send'
